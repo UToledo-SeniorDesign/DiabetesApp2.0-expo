@@ -1,7 +1,7 @@
 import React from "react";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import MealScreen from "./screens/MealScreen";
+import InsulinScreen from "./screens/InsulinScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import HistoryScreen from "./screens/HistoryScreen";
 import InformationScreen from "./screens/InformationScreen";
@@ -51,12 +51,12 @@ const Navigation = () => {
 				}}
 			/>
 			<Tab.Screen
-				name="Meal"
-				component={MealScreen}
+				name="Insulin"
+				component={InsulinScreen}
 				options={{
-					tabBarLabel: "Meal",
+					tabBarLabel: "Insulin",
 					tabBarIcon: ({ color }) => (
-						<MaterialCommunityIcons name="food-apple" color={color} size={26} />
+						<MaterialCommunityIcons name="hospital" color={color} size={26} />
 					),
 				}}
 			/>
