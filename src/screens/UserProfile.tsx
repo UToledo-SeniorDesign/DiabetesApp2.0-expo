@@ -8,9 +8,8 @@ import {
     TouchableRipple,
 } from 'react-native-paper';
 
-
+import InfoBox from '../components/InfoBox';
 import type { IUser } from '../types';
-
 
 interface UserProfileProp {
     user: IUser;
@@ -45,7 +44,6 @@ const UserProfile: React.FC<UserProfileProp> = (prop) => {
                 </View>
             </View>
 
-
             <View style={styles.userInfoSection}>
                 <View style={styles.row}>
                     <Avatar.Icon size={24} icon="phone" />
@@ -58,17 +56,15 @@ const UserProfile: React.FC<UserProfileProp> = (prop) => {
             </View>
 
             <View style={styles.infoBoxWrapper}>
-                <View style={[styles.infoBox, {
-                    borderRightColor: '#dddddd',
-                    borderRightWidth: 1
-                }]}>
-                    <Title>140</Title>
-                    <Caption>Today's Carbs</Caption>
-                </View>
-                <View style={styles.infoBox}>
-                    <Title>12</Title>
-                    <Caption>Today's Insulin Intake</Caption>
-                </View>
+                <InfoBox 
+                    title="140"
+                    caption="Today's Carbs"
+                    styling={{borderRightColor: '#dddddd', borderRightWidth: 1}}
+                />
+                <InfoBox 
+                    title="12"
+                    caption="Today's Insulin Intake"
+                />
             </View>
 
             <View style={styles.menuWrapper}>
@@ -94,7 +90,6 @@ const UserProfile: React.FC<UserProfileProp> = (prop) => {
                     </View>
                 </TouchableRipple>
             </View>
-
         </SafeAreaView>
     );
 }
@@ -129,11 +124,6 @@ const styles = StyleSheet.create({
         borderTopWidth: 1,
         flexDirection: 'row',
         height: 100,
-    },
-    infoBox: {
-        width: '50%',
-        alignItems: 'center',
-        justifyContent: 'center',
     },
     menuWrapper: {
         marginTop: 10,
