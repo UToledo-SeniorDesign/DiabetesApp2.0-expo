@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-const InformationScreen = () => {
+const InfoScreen = () => {
 	return (
 		<View style={styles.screen}>
 			<Text>Information section</Text>
@@ -16,4 +16,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default InformationScreen;
+export default InfoScreen;

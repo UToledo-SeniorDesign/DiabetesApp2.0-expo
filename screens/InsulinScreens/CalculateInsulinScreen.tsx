@@ -1,10 +1,11 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-const InsulinScreen = () => {
+const CalculateInsulinScreen = (props: any) => {
+	console.log(props.route.params);
 	return (
 		<View style={styles.screen}>
-			<Text>Insulin section</Text>
+			<Text>calc section</Text>
 		</View>
 	);
 };
@@ -16,4 +17,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default InsulinScreen;
+export default CalculateInsulinScreen;
