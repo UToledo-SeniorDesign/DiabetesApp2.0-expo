@@ -5,23 +5,43 @@ import FakeMealData, { MealDetail } from "../../services/FakeMealData";
 import SavedMealsTable from "./SavedMealsTable";
 
 const LoadMeal = (props: any) => {
-	const [savedMeals, setSavedMeals] = useState<MealDetail[]>(
-		FakeMealData.savedMeals
-	);
+	const [savedMeals, setSavedMeals] = useState<MealDetail[]>([]);
+	const [loadedMeals, setLoadedMeals] = useState(new Map<string, MealDetail>());
 
-	const loadSavedMeals = () => {
-		setSavedMeals(FakeMealData.savedMeals);
+	const onSelect = (meal: MealDetail, action: string) => {
+		const updatedLoadedMeals = new Map(loadedMeals);
+		if (action === "load") {
+			updatedLoadedMeals.set(meal.name, meal);
+		} else if (action === "unload") {
+			updatedLoadedMeals.delete(meal.name);
+		} else {
+			throw new Error("Unrecognized action");
+		}
+		setLoadedMeals(updatedLoadedMeals);
 	};
+
+	const onCancelHandler = () => {
+		setLoadedMeals(new Map<string, MealDetail>());
+		props.onDismiss();
+	};
+
+	console.log(loadedMeals);
 
 	return (
 		<View>
 			<Modal
 				visible={props.displayModal}
 				animationType="slide"
-				onShow={loadSavedMeals}
+				onShow={() => {
+					setSavedMeals(FakeMealData.savedMeals);
+				}}
 			>
 				<View style={styles.tableView}>
-					<SavedMealsTable meals={savedMeals} />
+					<SavedMealsTable
+						meals={savedMeals}
+						loadedMeals={loadedMeals}
+						onSelect={onSelect}
+					/>
 				</View>
 				<View style={styles.buttonContainer}>
 					<View style={styles.button}>
@@ -32,7 +52,7 @@ const LoadMeal = (props: any) => {
 						/>
 					</View>
 					<View style={styles.button}>
-						<Button title="Back" onPress={props.onDismiss} />
+						<Button title="Cancel" onPress={onCancelHandler} />
 					</View>
 				</View>
 			</Modal>

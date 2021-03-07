@@ -108,7 +108,7 @@ const AddMealScreen = (props: any) => {
 		});
 	};
 
-	const continueHandler = () => {
+	const calcInsulinHandler = () => {
 		if (
 			addedMeal.name !== "" ||
 			addedMeal.carbsPerServing !== "" ||
@@ -212,7 +212,7 @@ const AddMealScreen = (props: any) => {
 						<View style={styles.button}>
 							<Button
 								disabled={!isValidMeal}
-								title="Add to calculate Insulin"
+								title="Add Meal"
 								onPress={addMealHandler}
 							/>
 						</View>
@@ -220,7 +220,7 @@ const AddMealScreen = (props: any) => {
 							<Button
 								disabled={addedMeals.length === 0}
 								title="Calculate Insulin"
-								onPress={continueHandler}
+								onPress={calcInsulinHandler}
 							/>
 						</View>
 					</View>

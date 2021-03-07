@@ -6,28 +6,36 @@ import { MealDetail } from "../../services/FakeMealData";
 
 const SavedMealsTable = (props: any) => {
 	const [page, setPage] = React.useState(0);
-	const [checkList, setCheckList] = React.useState(() => {
-		let checks = new Map<string, "checked" | "unchecked" | "indeterminate">();
-		props.meals.forEach((meal: MealDetail) => {
-			checks.set(meal.name, "unchecked");
-		});
-		return checks;
-	});
+
+	console.log("loaded meals:");
+	console.log(props.loadedMeals);
 
 	const itemsPerPage = 10;
 	const from = page * itemsPerPage;
 	const to = (page + 1) * itemsPerPage;
 
-	const onSelectHandler = (mealName: string) => {
-		const status =
-			checkList.get(mealName) === "checked" ? "unchecked" : "checked";
+	const getCheckState = (mealName: string) => {
+		if (props.loadedMeals.get(mealName) === undefined) {
+			return "unchecked";
+		}
+		return "checked";
+	};
 
-		let checks = new Map<string, "checked" | "unchecked" | "indeterminate">(
-			checkList
-		);
+	const onSelectHandler = (meal: MealDetail) => {
+		if (props.loadedMeals.get(meal.name) === undefined) {
+			props.onSelect(meal, "load");
+		} else {
+			props.onSelect(meal, "unload");
+		}
+		// const status =
+		// 	checkList.get(mealName) === "checked" ? "unchecked" : "checked";
 
-		checks.set(mealName, status);
-		setCheckList(checks);
+		// let checks = new Map<string, "checked" | "unchecked" | "indeterminate">(
+		// 	checkList
+		// );
+
+		// checks.set(mealName, status);
+		// setCheckList(checks);
 	};
 
 	return (
@@ -44,7 +52,7 @@ const SavedMealsTable = (props: any) => {
 					<DataTable.Row
 						key={meal.name}
 						onPress={() => {
-							onSelectHandler(meal.name);
+							onSelectHandler(meal);
 						}}
 					>
 						<DataTable.Cell style={styles.meal}>{meal.name}</DataTable.Cell>
@@ -57,9 +65,9 @@ const SavedMealsTable = (props: any) => {
 						</DataTable.Cell>
 						<DataTable.Cell style={styles.check}>
 							<Checkbox
-								status={checkList.get(meal.name)!}
+								status={getCheckState(meal.name)}
 								onPress={() => {
-									onSelectHandler(meal.name);
+									onSelectHandler(meal);
 								}}
 							/>
 						</DataTable.Cell>
