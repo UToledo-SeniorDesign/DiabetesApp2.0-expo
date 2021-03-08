@@ -1,11 +1,20 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
+import { MealDetail } from "../../services/FakeMealData";
 
 const CalculateInsulinScreen = (props: any) => {
-	console.log(props.route.params);
+	const getTotalCarbs = () => {
+		let totalCarbs = 0;
+		props.route.params.meals.forEach((meal: MealDetail) => {
+			totalCarbs +=
+				parseInt(meal.carbsPerServing) * parseInt(meal.totalServing);
+		});
+		return totalCarbs;
+	};
+
 	return (
 		<View style={styles.screen}>
-			<Text>calc section</Text>
+			<Text>total carbs: {getTotalCarbs()}</Text>
 		</View>
 	);
 };

@@ -24,14 +24,38 @@ const AddMealScreen = (props: any) => {
 	});
 
 	const [addedMeals, setAddedMeals] = useState<MealDetail[]>([]);
+	const [loadedMeals, setLoadedMeals] = useState<MealDetail[]>([]);
 	const [isValidMeal, setIsValidMeal] = useState<boolean>(false);
 	const [displayModal, setDisplayModal] = useState<boolean>(false);
 
+	let savedMeals: MealDetail[] = [];
+
+	useEffect(() => {
+		savedMeals = FakeMealData.savedMeals;
+		validateMealForm();
+	});
+
+	const addMealHandler = () => {
+		setAddedMeals([...addedMeals, ...[addedMeal]]);
+
+		Alert.alert("Added " + addedMeal.name, "", [
+			{
+				text: "Okay",
+				style: "default",
+			},
+		]);
+		setAddedMeal({
+			name: "",
+			brand: "",
+			carbsPerServing: "",
+			totalServing: "",
+		});
+	};
+
 	const saveMealHandler = () => {
-		const savedMeals = FakeMealData.savedMeals;
 		const foundMeal = savedMeals.filter((meal) => meal.name === addedMeal.name);
 		if (foundMeal.length == 0) {
-			savedMeals.push(addedMeal);
+			FakeMealData.savedMeals.push(addedMeal);
 			Alert.alert("Successfully saved " + addedMeal.name, "", [
 				{
 					text: "Back",
@@ -47,10 +71,6 @@ const AddMealScreen = (props: any) => {
 			]);
 		}
 	};
-
-	useEffect(() => {
-		validateAddedMeal();
-	});
 
 	const getTotalCarbs = () => {
 		if (
@@ -79,7 +99,7 @@ const AddMealScreen = (props: any) => {
 		});
 	};
 
-	const validateAddedMeal = () => {
+	const validateMealForm = () => {
 		if (
 			addedMeal.name !== "" &&
 			addedMeal.carbsPerServing !== "" &&
@@ -89,23 +109,6 @@ const AddMealScreen = (props: any) => {
 		} else {
 			setIsValidMeal(false);
 		}
-	};
-
-	const addMealHandler = () => {
-		setAddedMeals([...addedMeals, ...[addedMeal]]);
-
-		Alert.alert("Added " + addedMeal.name, "", [
-			{
-				text: "Okay",
-				style: "default",
-			},
-		]);
-		setAddedMeal({
-			name: "",
-			brand: "",
-			carbsPerServing: "",
-			totalServing: "",
-		});
 	};
 
 	const calcInsulinHandler = () => {
@@ -124,16 +127,20 @@ const AddMealScreen = (props: any) => {
 					style: "default",
 					onPress: () => {
 						props.navigation.navigate("Calculate Insulin", {
-							meals: addedMeals,
+							meals: [...addedMeals, ...loadedMeals],
 						});
 					},
 				},
 			]);
 		} else {
 			props.navigation.navigate("Calculate Insulin", {
-				meals: addedMeals,
+				meals: [...addedMeals, ...loadedMeals],
 			});
 		}
+	};
+
+	const loadMealHandler = (newLoadedMeals: MealDetail[]) => {
+		setLoadedMeals(newLoadedMeals);
 	};
 
 	return (
@@ -149,6 +156,8 @@ const AddMealScreen = (props: any) => {
 						onDismiss={() => {
 							setDisplayModal(false);
 						}}
+						onFinishLoad={loadMealHandler}
+						loadedMeals={loadedMeals}
 					></LoadMeal>
 					<View style={styles.foodForm}>
 						<View style={styles.inputContainer}>
@@ -218,7 +227,7 @@ const AddMealScreen = (props: any) => {
 						</View>
 						<View style={styles.button}>
 							<Button
-								disabled={addedMeals.length === 0}
+								disabled={addedMeals.length === 0 && loadedMeals.length === 0}
 								title="Calculate Insulin"
 								onPress={calcInsulinHandler}
 							/>

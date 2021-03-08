@@ -142,48 +142,6 @@ export default class FakeMealData {
 			carbsPerServing: "1",
 			totalServing: "2",
 		},
-		{
-			name: "banana1",
-			brand: "",
-			carbsPerServing: "13",
-			totalServing: "2",
-		},
-		{
-			name: "pie1",
-			brand: "piebrand",
-			carbsPerServing: "122",
-			totalServing: "2",
-		},
-		{
-			name: "apple2",
-			brand: "",
-			carbsPerServing: "1",
-			totalServing: "2",
-		},
-		{
-			name: "banana2",
-			brand: "",
-			carbsPerServing: "13",
-			totalServing: "2",
-		},
-		{
-			name: "pie2",
-			brand: "piebrand",
-			carbsPerServing: "122",
-			totalServing: "2",
-		},
-		{
-			name: "banana3",
-			brand: "",
-			carbsPerServing: "13",
-			totalServing: "2",
-		},
-		{
-			name: "pie3",
-			brand: "piebrand",
-			carbsPerServing: "122",
-			totalServing: "2",
-		},
 	]
 }
 
