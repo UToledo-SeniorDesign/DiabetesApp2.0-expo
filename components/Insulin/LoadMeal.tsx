@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { Modal, View, Text, StyleSheet, Button } from "react-native";
+import React, { useState } from "react";
+import { Modal, View, StyleSheet, Button } from "react-native";
 import Colors from "../../constants/Colors";
 import FakeMealData, { MealDetail } from "../../services/FakeMealData";
 import { DataTable, Checkbox } from "react-native-paper";
 
 const LoadMeal = (props: any) => {
-	const [loadedMeals, setLoadedMeals] = useState(props.loadedMeals);
-	const [page, setPage] = React.useState(0);
+	const [loadedMeals, setLoadedMeals] = useState<MealDetail[]>(
+		props.loadedMeals
+	);
+	const [page, setPage] = useState(0);
+	const [canLoadMeal, setCanLoadMeal] = useState(false);
 
 	const savedMeals: MealDetail[] = FakeMealData.savedMeals;
 	const itemsPerPage = 10;
@@ -15,15 +18,25 @@ const LoadMeal = (props: any) => {
 
 	const onSelectHandler = (selectedMeal: MealDetail) => {
 		let tempMeals = [...loadedMeals];
+		let changedList = false;
 
 		for (let i = 0; i < loadedMeals.length; i++) {
 			if (selectedMeal.name === loadedMeals[i].name) {
 				tempMeals.splice(i, 1);
 				setLoadedMeals(tempMeals);
-				return;
+				changedList = true;
+				break;
 			}
 		}
-		tempMeals.push(selectedMeal);
+		if (!changedList) {
+			tempMeals.push(selectedMeal);
+		}
+
+		if (tempMeals.length === 0) {
+			setCanLoadMeal(false);
+		} else {
+			setCanLoadMeal(true);
+		}
 		setLoadedMeals(tempMeals);
 	};
 
@@ -99,6 +112,7 @@ const LoadMeal = (props: any) => {
 				<View style={styles.buttonContainer}>
 					<View style={styles.button}>
 						<Button
+							disabled={!canLoadMeal}
 							title="Load Meal"
 							color={Colors.primary}
 							onPress={onLoadMealHandler}
