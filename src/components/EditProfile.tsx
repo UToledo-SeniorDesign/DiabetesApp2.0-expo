@@ -3,7 +3,7 @@ import {
     SafeAreaView
 } from 'react-native';
 
-
+import Input from './Input';
 import type { IUser } from '../types';
 
 interface EditProfileProp {
@@ -11,9 +11,17 @@ interface EditProfileProp {
 }
 
 const EditProfile:React.FC<EditProfileProp> = (prop) => {
+    const inputHander = (val: string) => {
+        
+    }
+
     return(
         <SafeAreaView>
-            
+            <Input 
+                onInput={inputHander}
+                label="Email"
+                error={true}
+            />
         </SafeAreaView>
     );
 }
