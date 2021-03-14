@@ -8,8 +8,8 @@ import {
     TouchableRipple,
 } from 'react-native-paper';
 
-import InfoBox from '../components/InfoBox';
-import type { IUser } from '../types/users-types';
+import InfoBox from '../../components/InfoBox';
+import type { IUser } from '../../types/users-types';
 
 interface UserProfileProp {
     user: IUser;

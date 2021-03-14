@@ -3,8 +3,8 @@ import {
     SafeAreaView
 } from 'react-native';
 
-import Input from './Input';
-import type { IUser } from '../types/users-types';
+import Input from '../../components/FormElements/Input';
+import type { IUser } from '../../types/users-types';
 
 interface EditProfileProp {
     loggedUser: IUser;              // User currently signed in the app
