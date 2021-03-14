@@ -1,5 +1,5 @@
 import React from 'react';
-import { IUser } from '../types';
+import { IUser } from '../types/users-types';
 
 interface AuthProp {
     isLogingMode: boolean;              // Display logging or signup form

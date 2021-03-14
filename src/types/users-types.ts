@@ -1,6 +1,6 @@
-// Shared interfaces
-
-import { Image } from "react-native";
+/**
+ * Shared interfaces relating to Users/Patients
+ */
 
 export interface IUser {
     first_name: string;
