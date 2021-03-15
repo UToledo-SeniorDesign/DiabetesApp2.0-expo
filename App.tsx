@@ -1,19 +1,26 @@
 import React, { useCallback, useState } from "react";
+import { SafeAreaView, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
+import { Button } from 'react-native-paper';
 
+// Screens & Navigation
+import LoginScreen from "./src/screens/UserScreens/LoginScreen";
+import SignUpScreen from "./src/screens/UserScreens/SignUpScreen";
 import RootNavigation from "./src/navigation/RootNavigation";
+
+// Util 
 import AuthContext from './src/util/context/auth-context';
 import type { IUser } from "./src/types/users-types";
-import LoginScreen from "./src/screens/UserScreens/LoginScreen";
-import { SafeAreaView, View } from "react-native";
 
 export default function App() {
 	const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 	const [loggedUser, setLoggedUser] = useState<IUser>({} as IUser);
+	const [isLoginMode, setIsLoginMode] = useState<boolean>(true);
 
 	const login = useCallback((user: IUser) => {
-		setLoggedUser(user);
 		setIsLoggedIn(true);
+		setLoggedUser(user);
+		
 	}, []);
 
 	const logout = useCallback(() => {
@@ -32,7 +39,19 @@ export default function App() {
 	  } else{
 		  route = (
 			  <SafeAreaView>
-				  <LoginScreen />
+				  {isLoginMode && 
+				  	<LoginScreen />
+				  }
+				  {!isLoginMode && 
+				  	<SignUpScreen/>
+				  }
+				  <Button
+				  	mode="outlined"
+					onPress={() => setIsLoginMode(!isLoginMode)}
+				  >
+					  {isLoginMode && "SWITCH TO SIGNUP"}
+					  {!isLoginMode && "SWITCH TO LOGIN"}
+				  </Button>
 			  </SafeAreaView>
 		  )
 	  }

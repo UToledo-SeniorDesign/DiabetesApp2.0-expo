@@ -79,12 +79,10 @@ const LoginScreen:React.FC<{}> = () => {
                             // value={formikProp.values.password}
                             autoCompleteType="password"
                         />
-
-                        
                         <Button 
-                            onPress={formikProp.handleSubmit}
+                            onPress={formikProp.handleSubmit} 
+                            mode="contained"
                         >
-
                             Submit
                         </Button>
                     </React.Fragment>
