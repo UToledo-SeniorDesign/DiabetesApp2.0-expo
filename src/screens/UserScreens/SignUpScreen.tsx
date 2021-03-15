@@ -2,10 +2,11 @@ import React, { useContext } from 'react';
 import { SafeAreaView } from 'react-native';
 import { Button } from 'react-native-paper';
 import { Formik, FormikProps } from 'formik';
-import * as yup from 'yup';
 
 import Input from '../../components/FormElements/Input';
 import AuthContext from '../../util/context/auth-context'
+import { SignUpSchema } from '../../util/schema/form-schemas';
+
 import type { IUser } from '../../types/users-types';
 
 interface FormValues extends IUser {
@@ -14,43 +15,6 @@ interface FormValues extends IUser {
     confirmPassword: string;
     confirmEmail: string;
 }
-
-const validationSchema = yup.object().shape({
-    email: yup
-        .string()
-        .label('email')
-        .lowercase()
-        .email('Must be a valid email')
-        .required('Email is required'),
-    first_name: yup
-        .string()
-        .label('first_name')
-        .required('First Name is required'),
-    last_name: yup
-        .string()
-        .label('last_name')
-        .required('First Name is required'),
-    password: yup
-        .string()
-        .label('password')
-        .required('Password is required')
-        .min(6, 'Password must be at least 6 characters long.'),
-    img: yup
-        .string()
-        .label('image'),
-    confirmEmail: yup
-        .string()
-        .lowercase()
-        .email('Must be a valid email')
-        .label('confirmEmail')
-        .required('Confirm email is required')
-        .oneOf([yup.ref('email')], 'Emails do not match'),
-    confirmPassword: yup
-        .string()
-        .label('confirmPassword')
-        .required('Confirm password is required')
-        .oneOf([yup.ref('password')], 'Passwords do not match')
-});
 
 const SignUpScreen:React.FC<{}> = (prop) => {
     const auth = useContext(AuthContext);
@@ -82,7 +46,7 @@ const SignUpScreen:React.FC<{}> = (prop) => {
                         img: ''
                     } as FormValues
                 }
-                validationSchema={validationSchema}
+                validationSchema={SignUpSchema}
                 onSubmit={submitHandler}
             >
                 {(formikProp: FormikProps<FormValues>)=>(
