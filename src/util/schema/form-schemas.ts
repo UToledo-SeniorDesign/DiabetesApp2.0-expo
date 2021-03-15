@@ -6,7 +6,7 @@
 
 import * as yup from 'yup';
 
-// Schema for SignUp screen
+// SignUp Screen input schema
 const SignUpSchema = yup.object().shape({
     email: yup
         .string()
@@ -44,6 +44,20 @@ const SignUpSchema = yup.object().shape({
         .oneOf([yup.ref('password')], 'Passwords do not match')
 });
 
+// Login Screen input schema
+const LoginSchema = yup.object().shape({
+    email: yup
+        .string()
+        .label('Email')
+        .email()
+        .required('Email is required'),
+    password: yup
+        .string()
+        .label('Password')
+        .required('Password is reqired')
+});
+
 export {
-    SignUpSchema
+    SignUpSchema,
+    LoginSchema
 };

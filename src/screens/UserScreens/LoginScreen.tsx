@@ -2,11 +2,11 @@ import React, { useContext, useState } from 'react';
 import { SafeAreaView, View } from 'react-native';
 import { Button } from 'react-native-paper';
 import { Formik, FormikProps } from 'formik';
-import * as yup from 'yup';
 
 import Input from '../../components/FormElements/Input';
-import { IUser } from '../../types/users-types';
 import AuthContext from '../../util/context/auth-context';
+import { LoginSchema } from '../../util/schema/form-schemas';
+import { IUser } from '../../types/users-types';
 
 const USER:IUser = {
     first_name: 'Carlos',
@@ -21,36 +21,20 @@ interface FormValues {
     password: string;
 }
 
-const validationSchema = yup.object().shape({
-    email: yup.string().label('Email').email().required('Email is required'),
-    password: yup
-        .string()
-        .label('Password')
-        .required('Password is reqired')
-        .min(6, 'Password must be at least 6 characters long.')
-        
-});
-
 const LoginScreen:React.FC<{}> = () => {
     const auth =  useContext(AuthContext);
 
-    const onSubmitHandler = (values: FormValues) => {
+    const submitHandler = (values: FormValues):void => {
         alert(JSON.stringify(values));
         auth.login(USER);
     }
 
-    
-    const isEmailValid = (email: string | undefined): boolean => {
-        return (email ? true: false)
-    }
     return(
         <SafeAreaView style={{ marginTop: 90}}>
             <Formik
                 initialValues={{email:'', password: ''} as FormValues}
-                onSubmit={(values) => {
-                    auth.login(USER);
-                }}
-                validationSchema={validationSchema}
+                onSubmit={submitHandler}
+                validationSchema={LoginSchema}
             >
                 {(formikProp: FormikProps<FormValues>) => (
                     <React.Fragment>
