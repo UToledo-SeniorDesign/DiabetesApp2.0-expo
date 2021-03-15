@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, SafeAreaView, StyleSheet } from 'react-native';
 import {
     Avatar,
@@ -9,20 +9,17 @@ import {
 } from 'react-native-paper';
 
 import InfoBox from '../../components/InfoBox';
-import type { IUser } from '../../types/users-types';
+import AuthContext from '../../util/context/auth-context';
 
-interface UserProfileProp {
-    user: IUser;
-}
-
-const UserProfile: React.FC<UserProfileProp> = (prop) => {
+const UserProfile: React.FC<{}> = () => {
+    const context = useContext(AuthContext);
     const {
         first_name,
         last_name,
         email,
         phone,
         img
-    } = prop.user;
+    } = context.loggedUser;
     const name = first_name + " " + last_name;
 
     return (
@@ -39,7 +36,6 @@ const UserProfile: React.FC<UserProfileProp> = (prop) => {
                             marginTop: 15,
                             marginBottom: 5,
                         }]}>{name}</Title>
-                        <Caption style={styles.caption}>{name}</Caption>
                     </View>
                 </View>
             </View>
@@ -87,6 +83,13 @@ const UserProfile: React.FC<UserProfileProp> = (prop) => {
                     <View style={styles.menuItem}>
                         {/* <Icon name="settings-outline" color="#FF6347" size={25} /> */}
                         <Text style={styles.menuItemText}>Settings</Text>
+                    </View>
+                </TouchableRipple>
+
+                <TouchableRipple onPress={context.logout}>
+                    <View style={styles.menuItem}>
+                        {/* <Icon name="settings-outline" color="#FF6347" size={25} /> */}
+                        <Text style={styles.menuItemText}>Logout</Text>
                     </View>
                 </TouchableRipple>
             </View>
