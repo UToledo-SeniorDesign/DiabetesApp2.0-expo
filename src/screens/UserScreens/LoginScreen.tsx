@@ -5,38 +5,35 @@ import { Formik, FormikProps } from 'formik';
 
 import Input from '../../components/FormElements/Input';
 import AuthContext from '../../util/context/auth-context';
+import { validateLogin } from '../../services/AuthUser';
 import { LoginSchema } from '../../util/schema/form-schemas';
-import { IUser } from '../../types/users-types';
-
-const USER:IUser = {
-    first_name: 'Carlos',
-    last_name: 'Galo',
-    img: 'https://s4.anilist.co/file/anilistcdn/character/large/b66171-o2vk3689wWFK.png',
-    phone: '0000000',
-    email: 'cgalo@cgalo.com'
-}
-
-interface FormValues {
-    email: string;
-    password: string;
-}
+import { IUser, IUserLogin } from '../../types/users-types';
 
 const LoginScreen:React.FC<{}> = () => {
     const auth =  useContext(AuthContext);
 
-    const submitHandler = (values: FormValues):void => {
-        alert(JSON.stringify(values));
-        auth.login(USER);
+    const submitHandler = (values: IUserLogin):void => {
+        alert(JSON.stringify(values));      // Display the values entered
+        const response: IUser | null = validateLogin(values);
+        if (response === null){
+            // We don't allow them to login and display an error
+            
+        }
+        else{
+            // Response has the user values to log them in
+            
+            auth.login(response);
+        }
     }
 
     return(
         <SafeAreaView style={{ marginTop: 90}}>
             <Formik
-                initialValues={{email:'', password: ''} as FormValues}
+                initialValues={{email:'', password: ''} as IUserLogin}
                 onSubmit={submitHandler}
                 validationSchema={LoginSchema}
             >
-                {(formikProp: FormikProps<FormValues>) => (
+                {(formikProp: FormikProps<IUserLogin>) => (
                     <React.Fragment>
                         <Input 
                             label="Email"

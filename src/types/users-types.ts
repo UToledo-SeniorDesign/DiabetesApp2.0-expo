@@ -9,3 +9,9 @@ export interface IUser {
     phone:      string;
     img:        string;
 }
+
+export interface IUserLogin {
+    // Values needed to login a user, used in the LoginScreen
+    email: string;
+    password: string;
+}

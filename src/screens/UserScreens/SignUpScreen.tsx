@@ -4,9 +4,9 @@ import { Button } from 'react-native-paper';
 import { Formik, FormikProps } from 'formik';
 
 import Input from '../../components/FormElements/Input';
+import { validateSignUp } from '../../services/AuthUser';
 import AuthContext from '../../util/context/auth-context'
 import { SignUpSchema } from '../../util/schema/form-schemas';
-
 import type { IUser } from '../../types/users-types';
 
 interface FormValues extends IUser {
@@ -29,7 +29,15 @@ const SignUpScreen:React.FC<{}> = (prop) => {
                 'https://s4.anilist.co/file/anilistcdn/staff/large/n119917-mfjX9nNByZk3.jpg'
         }
 
-        auth.login(newUser);
+        const isValid = validateSignUp(newUser);
+        if (isValid){
+            // User is valid to signup and has be done in the backend, we sign-him in the app
+            auth.login(newUser);
+        }
+        else{
+            // We get here if we couldn't signup the user
+
+        }
     }
 
     return(
