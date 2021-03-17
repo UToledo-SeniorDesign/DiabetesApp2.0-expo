@@ -18,7 +18,7 @@ const DUMMY_USERS:Array<IUser> = [
         first_name: 'hello',
         last_name: 'world',
         phone:'',
-        email: 'hellow@world.com',
+        email: 'hello@world.com',
         img: ''
     },
     {
@@ -27,13 +27,20 @@ const DUMMY_USERS:Array<IUser> = [
         img: 'https://s4.anilist.co/file/anilistcdn/character/large/b66171-o2vk3689wWFK.png',
         phone: '0000000',
         email: 'cgalo@cgalo.com'
+    },
+    {
+        first_name: 'Test',
+        last_name: 'test',
+        phone: '0000000',
+        img: '',
+        email: 'test@test.com'
     }
 ];
 
 const getUser = (userEmail: string):IUser | null => {
     for (let i = 0; i < DUMMY_USERS.length; i++){
         const tempUser = DUMMY_USERS[i];
-        if(tempUser.email === userEmail){
+        if(tempUser.email.toLocaleLowerCase() === userEmail.toLocaleLowerCase()){
             return tempUser;
         }
     }
@@ -63,11 +70,13 @@ const validateSignUp = (newUser: IUser) => {
     */
 
     const user = getUser(newUser.email);
-    if (user){
+    console.log(user);
+    if (!user){         // If the user doesn't exist, then we can sign them up
         addUser(newUser);
-        return true
+        return true;
     }
-    return false;
+    return false;       // Else the signup email is already in use, return false
+    
 }
 
 const addUser = (newUser: IUser):void => {

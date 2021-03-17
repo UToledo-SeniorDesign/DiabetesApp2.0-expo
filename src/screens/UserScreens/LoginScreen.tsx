@@ -15,7 +15,6 @@ const LoginScreen:React.FC<{}> = () => {
 
     const submitHandler = (values: IUserLogin):void => {
         const response: IUser | null = validateLogin(values);
-        alert(JSON.stringify(values));      // Display the values entered
         if (response){                      // If we got an actual IUser
             auth.login(response);           // Then login the user we got back
         }

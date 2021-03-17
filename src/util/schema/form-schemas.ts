@@ -21,7 +21,7 @@ const SignUpSchema = yup.object().shape({
     last_name: yup
         .string()
         .label('last_name')
-        .required('First Name is required'),
+        .required('Last Name is required'),
     password: yup
         .string()
         .label('password')
@@ -55,7 +55,7 @@ const LoginSchema = yup.object().shape({
     password: yup
         .string()
         .label('Password')
-        .required('Password is reqired')
+        .required('Password is required')
 });
 
 export {
