@@ -40,7 +40,7 @@ const Input:React.FC<InputProp> = (prop) => {
 
   const onChange = (newText: string) => {
       setText(newText);                 // To mantain the as a controlled component
-      onInput(text);                    // Return the current text state to parent component
+      onInput(newText);                 // Return the current text state to parent component
   }
 
   return (

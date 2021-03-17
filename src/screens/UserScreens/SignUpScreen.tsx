@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
-import { SafeAreaView } from 'react-native';
-import { Button } from 'react-native-paper';
+import React, { useContext, useState } from 'react';
+import { SafeAreaView, View } from 'react-native';
+import { Button, Dialog, Paragraph, Portal } from 'react-native-paper';
 import { Formik, FormikProps } from 'formik';
 
 import Input from '../../components/FormElements/Input';
@@ -18,6 +18,7 @@ interface FormValues extends IUser {
 
 const SignUpScreen:React.FC<{}> = (prop) => {
     const auth = useContext(AuthContext);
+    const [showErrorDialog, setShowErrorDialog] = useState(false);
 
     const submitHandler = (values: FormValues):void => {
         const newUser:IUser = {
@@ -36,12 +37,29 @@ const SignUpScreen:React.FC<{}> = (prop) => {
         }
         else{
             // We get here if we couldn't signup the user
-
+            setShowErrorDialog(true);
         }
     }
 
     return(
         <SafeAreaView>
+            <Portal>
+                <Dialog
+                    visible={showErrorDialog}
+                    onDismiss={() => setShowErrorDialog(false)}
+                >
+                     <Dialog.Title>Email already in use</Dialog.Title>
+                     <Dialog.Content><Paragraph>Try switch to sign in</Paragraph></Dialog.Content>
+                     <Dialog.Actions>
+                         <Button
+                            mode="contained"
+                            onPress={() => setShowErrorDialog(false)}
+                         >
+                             Ok
+                        </Button>
+                     </Dialog.Actions>
+                </Dialog>
+            </Portal>
             <Formik
                 initialValues={
                     {

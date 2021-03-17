@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { SafeAreaView, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { Button } from 'react-native-paper';
+import { Button, Portal } from 'react-native-paper';
 
 // Screens & Navigation
 import LoginScreen from "./src/screens/UserScreens/LoginScreen";
@@ -38,21 +38,24 @@ export default function App() {
 		);
 	  } else{
 		  route = (
-			  <SafeAreaView>
-				  {isLoginMode && 
-				  	<LoginScreen />
-				  }
-				  {!isLoginMode && 
-				  	<SignUpScreen/>
-				  }
-				  <Button
-				  	mode="outlined"
-					onPress={() => setIsLoginMode(!isLoginMode)}
-				  >
-					  {isLoginMode && "SWITCH TO SIGNUP"}
-					  {!isLoginMode && "SWITCH TO LOGIN"}
-				  </Button>
-			  </SafeAreaView>
+			  <Portal.Host>
+				  <SafeAreaView>
+					{isLoginMode && 
+						<LoginScreen />
+					}
+					{!isLoginMode && 
+						<SignUpScreen/>
+					}
+					<Button
+						mode="outlined"
+						onPress={() => setIsLoginMode(!isLoginMode)}
+					>
+						{isLoginMode && "SWITCH TO SIGNUP"}
+						{!isLoginMode && "SWITCH TO LOGIN"}
+					</Button>
+				</SafeAreaView>
+			  </Portal.Host>
+				
 		  )
 	  }
 

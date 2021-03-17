@@ -48,6 +48,7 @@ const SignUpSchema = yup.object().shape({
 const LoginSchema = yup.object().shape({
     email: yup
         .string()
+        .lowercase()
         .label('Email')
         .email()
         .required('Email is required'),

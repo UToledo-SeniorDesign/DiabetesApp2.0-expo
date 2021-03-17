@@ -1,7 +1,8 @@
 /**
  * This file will handle signing-up and login users.
  * Creates API request to validate whether a user exists in the DB 
-**/
+ * 
+*/
 
 import type { IUser, IUserLogin } from '../types/users-types';
 
@@ -29,19 +30,27 @@ const DUMMY_USERS:Array<IUser> = [
     }
 ];
 
-const validateLogin = (loginUser: IUserLogin):IUser | null => {
-    // Verify the user that is attempting to login
-    let user:IUser | null = null;
-    
-    // For now we'll just check that the user alreadys exists in the dummy users array
-    for(var i = 0; i < DUMMY_USERS.length; i++){
+const getUser = (userEmail: string):IUser | null => {
+    for (let i = 0; i < DUMMY_USERS.length; i++){
         const tempUser = DUMMY_USERS[i];
-        if (tempUser.email == loginUser.email){
-            user = tempUser;
+        if(tempUser.email === userEmail){
+            return tempUser;
         }
     }
+    return null;
+}
 
-    return user;
+const validateLogin = (loginUser: IUserLogin):IUser | null => {
+    /**
+     * Function verifies if the provided email/password is a user
+     * 
+     * @param loginUser, type IUserLogin, contains email and password from LoginScreen
+     * @return IUser object if we found the user with the given credentials
+     * @return null if we couldn't find a user with the given credentials 
+    */
+    
+    // For now we'll just check that the user alreadys exists in the dummy users array
+    return getUser(loginUser.email);
 }
 
 const validateSignUp = (newUser: IUser) => {
@@ -51,15 +60,13 @@ const validateSignUp = (newUser: IUser) => {
      * @param newUser is the user trying to sign up to the app
      * @return True if the user doesn't exist, therefore we sign them up
      * @return False if we the user does exists, therefore we can't sign them up
-     */
+    */
 
-    for (let i = 0; i < DUMMY_USERS.length; i++){
-        const tempUser = DUMMY_USERS[i];
-        if(tempUser.email == newUser.email){
-            return true;
-        }
+    const user = getUser(newUser.email);
+    if (user){
+        addUser(newUser);
+        return true
     }
-    
     return false;
 }
 
