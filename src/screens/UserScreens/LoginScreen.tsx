@@ -14,9 +14,10 @@ const LoginScreen:React.FC<{}> = () => {
     const [showErrorDialog, setShowErrorDialog] = useState(false);
 
     const submitHandler = (values: IUserLogin):void => {
-        const response: IUser | null = validateLogin(values);
+        validateLogin(values);
+        const response: IUser | null = null;
         if (response){                      // If we got an actual IUser
-            auth.login(response);           // Then login the user we got back
+            // auth.login(response);           // Then login the user we got back
         }
         else {                              // Else we couldn't login the user
             setShowErrorDialog(true);       // Display error dialog to the user

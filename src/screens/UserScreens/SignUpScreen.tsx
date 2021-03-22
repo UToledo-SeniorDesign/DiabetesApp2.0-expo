@@ -1,6 +1,11 @@
-import React, { useContext, useState } from 'react';
-import { SafeAreaView, View } from 'react-native';
-import { Button, Dialog, Paragraph, Portal } from 'react-native-paper';
+import React, { useContext, useState, useEffect } from 'react';
+import { SafeAreaView } from 'react-native';
+import { 
+    Button, 
+    Dialog, 
+    Paragraph, 
+    Portal
+} from 'react-native-paper';
 import { Formik, FormikProps } from 'formik';
 
 import Input from '../../components/FormElements/Input';
@@ -18,42 +23,47 @@ interface FormValues extends IUser {
 
 const SignUpScreen:React.FC<{}> = (prop) => {
     const auth = useContext(AuthContext);
-    const [showErrorDialog, setShowErrorDialog] = useState(false);
+    const [showDialog, setShowDialog] = useState(false);
+    const [dialogError, setDialogError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
-    const submitHandler = (values: FormValues):void => {
+
+    const submitHandler = async(values: FormValues) => {
+        setIsLoading(true);
         const newUser:IUser = {
             first_name: values.first_name,
             last_name: values.last_name,
-            email: values.email,
-            phone: '',
-            img: 
-                'https://s4.anilist.co/file/anilistcdn/staff/large/n119917-mfjX9nNByZk3.jpg'
+            email: values.email
         }
+        const res:string | true = await validateSignUp(newUser, values.password);  // We either get true or an error message
 
-        const isValid = validateSignUp(newUser);
-        if (isValid){
-            // User is valid to signup and has be done in the backend, we sign-him in the app
+        if (res === true){
             auth.login(newUser);
+        } else{
+            setDialogError(res);
+            setShowDialog(true);
         }
-        else{
-            // We get here if we couldn't signup the user
-            setShowErrorDialog(true);
-        }
+        setIsLoading(false);
+    }
+
+    const dismissDialog = ():void => {
+        setShowDialog(false);
+        setDialogError('');
     }
 
     return(
         <SafeAreaView>
             <Portal>
                 <Dialog
-                    visible={showErrorDialog}
-                    onDismiss={() => setShowErrorDialog(false)}
+                    visible={showDialog}
+                    onDismiss={dismissDialog}
                 >
-                     <Dialog.Title>Email already in use</Dialog.Title>
-                     <Dialog.Content><Paragraph>Try switch to sign in</Paragraph></Dialog.Content>
+                     <Dialog.Title>SignUp Error</Dialog.Title>
+                     <Dialog.Content><Paragraph>{dialogError}</Paragraph></Dialog.Content>
                      <Dialog.Actions>
                          <Button
                             mode="contained"
-                            onPress={() => setShowErrorDialog(false)}
+                            onPress={dismissDialog}
                          >
                              Ok
                         </Button>
@@ -68,8 +78,7 @@ const SignUpScreen:React.FC<{}> = (prop) => {
                         email: '',
                         confirmEmail: '',
                         password: '',
-                        confirmPassword: '',
-                        img: ''
+                        confirmPassword: ''
                     } as FormValues
                 }
                 validationSchema={SignUpSchema}

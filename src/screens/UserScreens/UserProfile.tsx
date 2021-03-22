@@ -17,7 +17,6 @@ const UserProfile: React.FC<{}> = () => {
         first_name,
         last_name,
         email,
-        phone,
         img
     } = context.loggedUser;
     const name = first_name + " " + last_name;
@@ -27,10 +26,8 @@ const UserProfile: React.FC<{}> = () => {
 
             <View style={styles.userInfoSection}>
                 <View style={{ flexDirection: 'row', marginTop: 15 }}>
-                    <Avatar.Image
-                        source={{ uri: img }}
-                        size={80}
-                    />
+                    {!img && <Avatar.Text size={80} label={first_name[0] + last_name[0]} /> }
+                    {img && <Avatar.Image source={{ uri: img }} size={80} /> }
                     <View style={{ marginLeft: 20 }}>
                         <Title style={[styles.title, {
                             marginTop: 15,
@@ -41,10 +38,6 @@ const UserProfile: React.FC<{}> = () => {
             </View>
 
             <View style={styles.userInfoSection}>
-                <View style={styles.row}>
-                    <Avatar.Icon size={24} icon="phone" />
-                    <Text style={{ color: "#777777", marginLeft: 20 }}>{phone}</Text>
-                </View>
                 <View style={styles.row}>
                     <Avatar.Icon size={24} icon="email" />
                     <Text style={{ color: "#777777", marginLeft: 20 }}>{email}</Text>

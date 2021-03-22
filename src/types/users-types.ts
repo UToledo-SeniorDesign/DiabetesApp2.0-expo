@@ -6,8 +6,7 @@ export interface IUser {
     first_name: string;
     last_name:  string;
     email:      string;
-    phone:      string;
-    img:        string;
+    img?:       string;
 }
 
 export interface IUserLogin {
