@@ -3,7 +3,6 @@ import { View, SafeAreaView, StyleSheet } from 'react-native';
 import {
     Avatar,
     Title,
-    Caption,
     Text,
     TouchableRipple,
 } from 'react-native-paper';
@@ -12,14 +11,14 @@ import InfoBox from '../../components/InfoBox';
 import AuthContext from '../../util/context/auth-context';
 
 const UserProfile: React.FC<{}> = () => {
-    const context = useContext(AuthContext);
+    const {loggedUser, logout} = useContext(AuthContext);
     const {
         first_name,
         last_name,
         email,
         img
-    } = context.loggedUser;
-    const name = first_name + " " + last_name;
+    } = loggedUser;
+    const fullName = first_name + " " + last_name;
 
     return (
         <SafeAreaView style={styles.container}>
@@ -32,7 +31,7 @@ const UserProfile: React.FC<{}> = () => {
                         <Title style={[styles.title, {
                             marginTop: 15,
                             marginBottom: 5,
-                        }]}>{name}</Title>
+                        }]}>{fullName}</Title>
                     </View>
                 </View>
             </View>
@@ -79,7 +78,7 @@ const UserProfile: React.FC<{}> = () => {
                     </View>
                 </TouchableRipple>
 
-                <TouchableRipple onPress={context.logout}>
+                <TouchableRipple onPress={logout}>
                     <View style={styles.menuItem}>
                         {/* <Icon name="settings-outline" color="#FF6347" size={25} /> */}
                         <Text style={styles.menuItemText}>Logout</Text>

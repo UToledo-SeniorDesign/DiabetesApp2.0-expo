@@ -58,7 +58,7 @@ const SignUpScreen:React.FC<{}> = (prop) => {
                     visible={showDialog}
                     onDismiss={dismissDialog}
                 >
-                     <Dialog.Title>SignUp Error</Dialog.Title>
+                     <Dialog.Title>SignUp Fail</Dialog.Title>
                      <Dialog.Content><Paragraph>{dialogError}</Paragraph></Dialog.Content>
                      <Dialog.Actions>
                          <Button
