@@ -4,10 +4,9 @@
  * 
 */
 
-import {useEffect} from 'react';
 import axios, { AxiosResponse } from 'axios';
 
-import type { IUser, IUserLogin } from '../types/users-types';
+import type { IUser } from '../types/users-types';
 
 interface ISignUpDataResponse extends IUser {
     /**
@@ -22,21 +21,57 @@ interface IErrorResponse {
     message: string;
 }
 
+const errorHandler = (error: any): string => {
+    /**
+     * Function handles the output error message given an error from a catch block
+     * @param error is an error from a catch block when making a async-await request
+     * @return String that will be the output error message to display
+    */
 
-const validateLogin = (loginUser: IUserLogin):IUser | null => {
+    let errorMessage:string;
+         if (error.response){
+             // Request made and server responded, response.status has the HTTP error code we got back
+             const response:AxiosResponse = error.response;      // Save the response as AxiosResponse type
+             const data:IErrorResponse = response.data;          // Get the data from the response
+             errorMessage = data.message;                        // Get the error message from the data
+             return errorMessage;                                // Return the error to display in the app
+         }else if (error.request){
+             // The request was made but no response was received from the server
+            //  console.log(error.request);
+             errorMessage = "There was an error on our side, please try again later."
+             return errorMessage;
+         } else{
+             // Something happened in setting up the request that triggered an Error
+             console.log('Error', error.message);
+             errorMessage = "Some error occurred, please try again later."
+             return errorMessage;
+         }
+}
+
+async function validateLogin(email: string, password: string) {
     /**
      * Function verifies if the provided email/password is a user
      * 
      * @param loginUser, type IUserLogin, contains email and password from LoginScreen
      * @return IUser object if we found the user with the given credentials
-     * @return null if we couldn't find a user with the given credentials 
+     * @return String(error message) if we couldn't find a user with the given credentials
     */
-    
-    // For now we'll just check that the user alreadys exists in the dummy users array
-    return null;
+
+    try {
+        const response = await axios.post('http://10.0.0.3:5000/api/users/login', {
+            email: email.toLowerCase(),
+            password: password
+        })
+        const data = response.data;
+        const user:IUser = data.user;
+        return user;
+    } catch(err){
+        const errMsg = errorHandler(err);
+        return errMsg;
+    }
 }
 
-const validateSignUp = async(newUser: IUser, password: string) => {
+async function validateSignUp(newUser: IUser, password: string) {
     /**
      * Function verifies if the user already exists in the DB
      * 
@@ -60,30 +95,7 @@ const validateSignUp = async(newUser: IUser, password: string) => {
         // We get here if we got an 'Ok' response, aka a 200 HTTP request
 
     } catch (error) {
-        /**
-         * We get here if something went wrong (no connection/HTTP request error response)
-         * Post for error handling:
-         *  -https://stackoverflow.com/questions/49967779/axios-handling-errors
-        */
-        
-        let errorMessage:string;
-        if (error.response){
-            // Request made and server responded, response.status has the HTTP error code we got back
-            const response:AxiosResponse = error.response;      // Save the response as AxiosResponse type
-            const data:IErrorResponse = response.data;          // Get the data from the response
-            errorMessage = data.message;                        // Get the error message from the data
-            return errorMessage;                                // Return the error to display in the app
-        }else if (error.request){
-            // The request was made but no response was received from the server
-            console.log(error.request);
-            errorMessage = "There was an error on our side, please try again later."
-            return errorMessage;
-        } else{
-            // Something happened in setting up the request that triggered an Error
-            console.log('Error', error.message);
-            errorMessage = "Some error occurred, please try again later."
-            return errorMessage;
-        }
+        return errorHandler(error);
     }
 }
 

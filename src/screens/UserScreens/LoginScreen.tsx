@@ -7,20 +7,37 @@ import Input from '../../components/FormElements/Input';
 import AuthContext from '../../util/context/auth-context';
 import { validateLogin } from '../../services/AuthUser';
 import { LoginSchema } from '../../util/schema/form-schemas';
-import { IUser, IUserLogin } from '../../types/users-types';
+import { IUserLogin } from '../../types/users-types';
 
 const LoginScreen:React.FC<{}> = () => {
     const auth =  useContext(AuthContext);
-    const [showErrorDialog, setShowErrorDialog] = useState(false);
+    const [showError, setShowError] = useState(false);
+    const [errorMsg, setErrorMsg] = useState('');
 
-    const submitHandler = (values: IUserLogin):void => {
-        validateLogin(values);
-        const response: IUser | null = null;
-        if (response){                      // If we got an actual IUser
-            // auth.login(response);           // Then login the user we got back
+    const showErrorDialog = (message: string):void => {
+        /**
+         * Function toggles the error dialog on with it's new error message.
+         * The dialog/error is dismissed by the user!
+         * @param message is the error message to display in the dialog
+         */
+
+        setErrorMsg(message);
+        setShowError(true);
+    }
+
+    const submitHandler = async(values: IUserLogin) => {
+        /**
+         * Function sends the data to the service function to handle the request to the backend. 
+         * The validateLogin returns either a string with the error message or the user data.
+         * @param values (email/password) from the Formik/form
+        */
+
+        const response = await validateLogin(values.email, values.password);
+        if (typeof(response) !== 'string'){
+            auth.login(response);
         }
-        else {                              // Else we couldn't login the user
-            setShowErrorDialog(true);       // Display error dialog to the user
+        else {
+            showErrorDialog(response);
         }
     }
 
@@ -29,15 +46,15 @@ const LoginScreen:React.FC<{}> = () => {
             {/* Portal allows the Dialog to be on top of the actual form section */}
             <Portal>
                 <Dialog
-                    visible={showErrorDialog}
-                    onDismiss={() => setShowErrorDialog(false)}
+                    visible={showError}
+                    onDismiss={() => setShowError(false)}
                 >
                      <Dialog.Title>Login Fail</Dialog.Title>
-                     <Dialog.Content><Paragraph>Incorrect email or password</Paragraph></Dialog.Content>
+                     <Dialog.Content><Paragraph>{errorMsg}</Paragraph></Dialog.Content>
                      <Dialog.Actions>
                          <Button
                             mode="contained"
-                            onPress={() => setShowErrorDialog(false)}
+                            onPress={() => setShowError(false)}
                          >
                              Ok
                         </Button>
@@ -47,7 +64,9 @@ const LoginScreen:React.FC<{}> = () => {
             <SafeAreaView style={{ marginTop: 90}}>
                 <Formik
                     initialValues={{email:'', password: ''} as IUserLogin}
-                    onSubmit={submitHandler}
+                    onSubmit={ async (values) => {
+                        await submitHandler(values);
+                    }}
                     validationSchema={LoginSchema}
                 >
                     {(formikProp: FormikProps<IUserLogin>) => (
