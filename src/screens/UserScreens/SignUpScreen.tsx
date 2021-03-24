@@ -82,7 +82,9 @@ const SignUpScreen:React.FC<{}> = (prop) => {
                     } as FormValues
                 }
                 validationSchema={SignUpSchema}
-                onSubmit={submitHandler}
+                onSubmit={async(values) => {
+                    await submitHandler(values);
+                }}
             >
                 {(formikProp: FormikProps<FormValues>)=>(
                     <React.Fragment>
