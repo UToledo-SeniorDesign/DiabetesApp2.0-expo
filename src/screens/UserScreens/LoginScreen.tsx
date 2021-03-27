@@ -3,9 +3,9 @@ import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Formik, FormikProps } from 'formik';
 
-import Input from '../../components/FormElements/Input';
-import Spinner from '../../components/FormElements/Spinner';
-import Button from '../../components/FormElements/Button';
+import Input from '../../components/UIElements/Input';
+import Spinner from '../../components/UIElements/Spinner';
+import Button from '../../components/UIElements/Button';
 
 import AuthContext from '../../util/context/auth-context';
 import { validateLogin } from '../../services/AuthUser';

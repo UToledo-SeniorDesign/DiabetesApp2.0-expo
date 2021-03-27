@@ -3,7 +3,7 @@ import {
     SafeAreaView
 } from 'react-native';
 
-import Input from '../../components/FormElements/Input';
+import Input from '../../components/UIElements/Input';
 import type { IUser } from '../../types/users-types';
 
 interface EditProfileProp {

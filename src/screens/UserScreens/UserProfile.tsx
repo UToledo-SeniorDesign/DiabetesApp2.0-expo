@@ -7,7 +7,7 @@ import {
     TouchableRipple,
 } from 'react-native-paper';
 
-import InfoBox from '../../components/InfoBox';
+import InfoBox from '../../components/UIElements/InfoBox';
 import AuthContext from '../../util/context/auth-context';
 
 const UserProfile: React.FC<{}> = () => {
