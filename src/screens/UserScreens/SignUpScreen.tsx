@@ -1,18 +1,15 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
-import { 
-    ActivityIndicator,
-    Button, 
-    Dialog, 
-    Paragraph, 
-    Portal
-} from 'react-native-paper';
+import { Dialog, Paragraph, Portal } from 'react-native-paper';
 import { Formik, FormikProps } from 'formik';
 
 import Input from '../../components/FormElements/Input';
-import { validateSignUp } from '../../services/AuthUser';
+import Button from '../../components/FormElements/Button';
+import Spinner from '../../components/FormElements/Spinner';
+
 import AuthContext from '../../util/context/auth-context'
 import { SignUpSchema } from '../../util/schema/form-schemas';
+import { validateSignUp } from '../../services/AuthUser';
 import type { IUser, AuthUser } from '../../types/users-types';
 
 interface FormValues extends IUser {
@@ -65,7 +62,7 @@ const SignUpScreen:React.FC<SignUpProp> = (prop) => {
         <SafeAreaView>
             {isLoading && 
                 <View style={styles.loading}>
-                    <ActivityIndicator size="large" />
+                    <Spinner />
                 </View>
             }
             {!isLoading &&
@@ -78,11 +75,9 @@ const SignUpScreen:React.FC<SignUpProp> = (prop) => {
                         <Dialog.Content><Paragraph>{dialogError}</Paragraph></Dialog.Content>
                         <Dialog.Actions>
                             <Button
-                                mode="contained"
                                 onPress={dismissDialog}
-                            >
-                                Ok
-                            </Button>
+                                text="Ok"
+                            />
                         </Dialog.Actions>
                     </Dialog>
                 </Portal>
@@ -152,20 +147,18 @@ const SignUpScreen:React.FC<SignUpProp> = (prop) => {
 
                                 <Button
                                     onPress={formikProp.handleSubmit}
-                                    mode="contained"
-                                >
-                                    Submit
-                                </Button>
+                                    text="Submit"
+                                />
                             </React.Fragment>
                         )}
                     </Formik></>
             }
             <Button 
-                mode="outlined"
+                text="Switch to login"
                 onPress={prop.switchToLogin}
-            >
-                SWITCH TO LOGIN
-            </Button>
+                uppercase={true}
+                mode='outlined'
+            />
         </SafeAreaView>
     );
 }

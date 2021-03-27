@@ -1,10 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
-import { Button, Dialog, Portal, Paragraph } from 'react-native-paper';
+import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Formik, FormikProps } from 'formik';
 
 import Input from '../../components/FormElements/Input';
 import Spinner from '../../components/FormElements/Spinner';
+import Button from '../../components/FormElements/Button';
 
 import AuthContext from '../../util/context/auth-context';
 import { validateLogin } from '../../services/AuthUser';
@@ -70,11 +71,9 @@ const LoginScreen:React.FC<LoginScreenProp> = (prop) => {
                             <Dialog.Content><Paragraph>{errorMsg}</Paragraph></Dialog.Content>
                             <Dialog.Actions>
                                 <Button
-                                    mode="contained"
+                                    text="Ok"
                                     onPress={() => setShowError(false)}
-                                >
-                                    Ok
-                                </Button>
+                                />
                             </Dialog.Actions>
                         </Dialog>
                     </Portal>
@@ -113,20 +112,18 @@ const LoginScreen:React.FC<LoginScreenProp> = (prop) => {
                                     />
                                     <Button
                                         onPress={formikProp.handleSubmit} 
-                                        mode="contained"
-                                    >
-                                        Submit
-                                    </Button>
+                                        text="Submit"
+                                    />
                                 </React.Fragment>
                             )}
                         </Formik>
                     </SafeAreaView>
                     <Button 
-                        mode="outlined"
+                        text="Switch to signup"
+                        uppercase={true}
+                        mode='outlined'
                         onPress={prop.switchToSignUp}
-                    >
-                        SWITCH TO SIGNUP
-                    </Button>
+                    />
                 </React.Fragment>
             }
         </View>
