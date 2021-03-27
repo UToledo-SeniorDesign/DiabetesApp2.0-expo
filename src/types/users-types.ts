@@ -14,3 +14,13 @@ export interface IUserLogin {
     email: string;
     password: string;
 }
+
+export interface AuthUser extends IUser {
+    /**
+     * Interface for the response.data for a successful response when signing up a user.
+     * This will be used to show and send requests to the backend with verified data.
+    */
+
+    _id: string;
+    token: string;
+}

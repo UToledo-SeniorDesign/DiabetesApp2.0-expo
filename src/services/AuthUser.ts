@@ -6,15 +6,13 @@
 
 import axios, { AxiosResponse } from 'axios';
 
-import type { IUser } from '../types/users-types';
+import type { IUser, AuthUser } from '../types/users-types';
 
-interface ISignUpDataResponse extends IUser {
-    /**
-     * Interface for the response.data for a successful response when signing up a user.
-     * For now the backend is sending back the created user in the DB
-     */
-    _id: string;
+interface ResponseData {
+    // Attributes sent as 'data' from a successful (200) HTTP request
+    user: AuthUser;
 }
+
 
 interface IErrorResponse {
     // Interface for response data from a HTTP request when we get an error
@@ -62,8 +60,8 @@ async function validateLogin(email: string, password: string) {
             email: email.toLowerCase(),
             password: password
         })
-        const data = response.data;
-        const user:IUser = data.user;
+        const data:ResponseData = response.data;
+        const user:AuthUser = data.user;
         return user;
     } catch(err){
         const errMsg = errorHandler(err);
@@ -89,9 +87,9 @@ async function validateSignUp(newUser: IUser, password: string) {
             image: ''
         });
 
-        const data:ISignUpDataResponse = response.data;     // Destructure the data from the response
-        console.log(data);
-        return true;                                        // Return true as the user was created
+        const data:ResponseData = response.data;            // Get the data from the respnose
+        const user:AuthUser = data.user;                    // Get the created user data from the backend
+        return user;                                        // We return the created user with token and id
         // We get here if we got an 'Ok' response, aka a 200 HTTP request
 
     } catch (error) {

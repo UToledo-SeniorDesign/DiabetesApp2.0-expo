@@ -7,7 +7,7 @@ import Input from '../../components/FormElements/Input';
 import AuthContext from '../../util/context/auth-context';
 import { validateLogin } from '../../services/AuthUser';
 import { LoginSchema } from '../../util/schema/form-schemas';
-import { IUserLogin } from '../../types/users-types';
+import { IUserLogin, AuthUser } from '../../types/users-types';
 
 const LoginScreen:React.FC<{}> = () => {
     const auth =  useContext(AuthContext);
@@ -28,16 +28,18 @@ const LoginScreen:React.FC<{}> = () => {
     const submitHandler = async(values: IUserLogin) => {
         /**
          * Function sends the data to the service function to handle the request to the backend. 
-         * The validateLogin returns either a string with the error message or the user data.
+         * The validateLogin returns either a string with the error message or the created user 
+         * obj from the backend.
          * @param values (email/password) from the Formik/form
         */
 
-        const response = await validateLogin(values.email, values.password);
-        if (typeof(response) !== 'string'){
-            auth.login(response);
-        }
-        else {
+        const response:string | AuthUser = await validateLogin(values.email, values.password);
+        if (typeof(response) === 'string'){
+            // We got an error message
             showErrorDialog(response);
+        } else{
+            // We got the created user from the backend
+            auth.login(response)
         }
     }
 

@@ -5,13 +5,13 @@
 
 import { createContext } from 'react';
 
-import type { IUser } from '../../types/users-types';
+import type { AuthUser } from '../../types/users-types';
 
 const AuthContext = createContext({
     isLoggedIn: false, 
-    login: (user: IUser) => {}, 
+    login: (user: AuthUser) => {}, 
     logout: () => {},
-    loggedUser: {} as IUser
+    loggedUser: {} as AuthUser
 });
 
 export default AuthContext;

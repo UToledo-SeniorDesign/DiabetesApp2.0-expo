@@ -10,14 +10,14 @@ import RootNavigation from "./src/navigation/RootNavigation";
 
 // Util 
 import AuthContext from './src/util/context/auth-context';
-import type { IUser } from "./src/types/users-types";
+import type { AuthUser } from "./src/types/users-types";
 
 export default function App() {
 	const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-	const [loggedUser, setLoggedUser] = useState<IUser>({} as IUser);
+	const [loggedUser, setLoggedUser] = useState<AuthUser>({} as AuthUser);
 	const [isLoginMode, setIsLoginMode] = useState<boolean>(true);
 
-	const login = useCallback((user: IUser) => {
+	const login = useCallback((user: AuthUser) => {
 		setIsLoggedIn(true);
 		setLoggedUser(user);
 		
@@ -25,7 +25,7 @@ export default function App() {
 
 	const logout = useCallback(() => {
 		setIsLoggedIn(false);
-		setLoggedUser({} as IUser);
+		setLoggedUser({} as AuthUser);
 	  }, [])
 
 	  let route;

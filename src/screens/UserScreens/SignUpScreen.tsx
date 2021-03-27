@@ -12,7 +12,7 @@ import Input from '../../components/FormElements/Input';
 import { validateSignUp } from '../../services/AuthUser';
 import AuthContext from '../../util/context/auth-context'
 import { SignUpSchema } from '../../util/schema/form-schemas';
-import type { IUser } from '../../types/users-types';
+import type { IUser, AuthUser } from '../../types/users-types';
 
 interface FormValues extends IUser {
     // Required data to sign up a user
@@ -35,13 +35,15 @@ const SignUpScreen:React.FC<{}> = (prop) => {
             last_name: values.last_name,
             email: values.email
         }
-        const res:string | true = await validateSignUp(newUser, values.password);  // We either get true or an error message
+        // Now lets create the user, we either get an error message or the user from the backend
+        const res:string | AuthUser = await validateSignUp(newUser, values.password);  
 
-        if (res === true){
-            auth.login(newUser);
+        if (typeof(res) === 'string'){
+            // We get here if we got an error message back
+            displayDialog(res);
         } else{
-            setDialogError(res);
-            setShowDialog(true);
+            // We get here if we got the newly created user from the backend
+            auth.login(res);
         }
         setIsLoading(false);
     }
@@ -49,6 +51,11 @@ const SignUpScreen:React.FC<{}> = (prop) => {
     const dismissDialog = ():void => {
         setShowDialog(false);
         setDialogError('');
+    }
+
+    const displayDialog = (errMsg: string):void => {
+        setDialogError(errMsg);
+        setShowDialog(true);
     }
 
     return(
