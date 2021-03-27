@@ -1,21 +1,14 @@
 import React, { useCallback, useState } from "react";
-import { SafeAreaView, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { Button, Portal } from 'react-native-paper';
+import { Portal } from 'react-native-paper';
 
-// Screens & Navigation
-import LoginScreen from "./src/screens/UserScreens/LoginScreen";
-import SignUpScreen from "./src/screens/UserScreens/SignUpScreen";
 import RootNavigation from "./src/navigation/Navigation";
-
-// Util 
 import AuthContext from './src/util/context/auth-context';
 import type { AuthUser } from "./src/types/users-types";
 
-export default function App() {
+const App:React.FC<{}> = () => {
 	const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 	const [loggedUser, setLoggedUser] = useState<AuthUser>({} as AuthUser);
-	const [isLoginMode, setIsLoginMode] = useState<boolean>(true);
 
 	const login = useCallback((user: AuthUser) => {
 		setIsLoggedIn(true);
@@ -26,35 +19,7 @@ export default function App() {
 	const logout = useCallback(() => {
 		setIsLoggedIn(false);
 		setLoggedUser({} as AuthUser);
-	  }, [])
-
-	  let route;
-
-	  if (isLoggedIn){
-		route = (
-			<NavigationContainer>
-				<RootNavigation />
-			</NavigationContainer>
-		);
-	  } else{
-		  route = (
-			  <Portal.Host>
-				  <SafeAreaView>
-					{isLoginMode && 
-						<LoginScreen 
-							switchToSignUp={() => setIsLoginMode(false)}
-						/>
-					}
-					{!isLoginMode && 
-						<SignUpScreen 
-							switchToLogin={() => setIsLoginMode(true)}
-						/>
-					}
-				</SafeAreaView>
-			  </Portal.Host>
-				
-		  )
-	  }
+	  }, []);
 
 	return (
 		<AuthContext.Provider
@@ -65,7 +30,13 @@ export default function App() {
 				loggedUser: loggedUser
 			}}
 		>
-			{route}
+      <Portal.Host>
+        <NavigationContainer>
+          <RootNavigation />
+        </NavigationContainer>
+      </Portal.Host>
 		</AuthContext.Provider>
 	);
 }
+
+export default App;

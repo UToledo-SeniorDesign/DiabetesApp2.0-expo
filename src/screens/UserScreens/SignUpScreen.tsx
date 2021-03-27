@@ -19,11 +19,7 @@ interface FormValues extends IUser {
     confirmEmail: string;
 }
 
-interface SignUpProp {
-    switchToLogin: () => void;
-}
-
-const SignUpScreen:React.FC<SignUpProp> = (prop) => {
+const SignUpScreen:React.FC<{}> = (prop) => {
     const auth = useContext(AuthContext);
     const [showDialog, setShowDialog] = useState(false);
     const [dialogError, setDialogError] = useState('');
@@ -153,12 +149,6 @@ const SignUpScreen:React.FC<SignUpProp> = (prop) => {
                         )}
                     </Formik></>
             }
-            <Button 
-                text="Switch to login"
-                onPress={prop.switchToLogin}
-                uppercase={true}
-                mode='outlined'
-            />
         </SafeAreaView>
     );
 }

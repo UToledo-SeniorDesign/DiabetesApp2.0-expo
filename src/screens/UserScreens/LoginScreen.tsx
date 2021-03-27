@@ -12,11 +12,7 @@ import { validateLogin } from '../../services/AuthUser';
 import { LoginSchema } from '../../util/schema/form-schemas';
 import { IUserLogin, AuthUser } from '../../types/users-types';
 
-interface LoginScreenProp{
-    switchToSignUp: () => void;
-}
-
-const LoginScreen:React.FC<LoginScreenProp> = (prop) => {
+const LoginScreen:React.FC<{}> = (prop) => {
     const auth =  useContext(AuthContext);
     const [showError, setShowError] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
@@ -118,12 +114,6 @@ const LoginScreen:React.FC<LoginScreenProp> = (prop) => {
                             )}
                         </Formik>
                     </SafeAreaView>
-                    <Button 
-                        text="Switch to signup"
-                        uppercase={true}
-                        mode='outlined'
-                        onPress={prop.switchToSignUp}
-                    />
                 </React.Fragment>
             }
         </View>
