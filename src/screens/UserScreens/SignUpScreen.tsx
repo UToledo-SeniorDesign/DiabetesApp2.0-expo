@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { 
+    ActivityIndicator,
     Button, 
     Dialog, 
     Paragraph, 
@@ -21,7 +22,11 @@ interface FormValues extends IUser {
     confirmEmail: string;
 }
 
-const SignUpScreen:React.FC<{}> = (prop) => {
+interface SignUpProp {
+    switchToLogin: () => void;
+}
+
+const SignUpScreen:React.FC<SignUpProp> = (prop) => {
     const auth = useContext(AuthContext);
     const [showDialog, setShowDialog] = useState(false);
     const [dialogError, setDialogError] = useState('');
@@ -29,7 +34,6 @@ const SignUpScreen:React.FC<{}> = (prop) => {
 
 
     const submitHandler = async(values: FormValues) => {
-        setIsLoading(true);
         const newUser:IUser = {
             first_name: values.first_name,
             last_name: values.last_name,
@@ -37,7 +41,7 @@ const SignUpScreen:React.FC<{}> = (prop) => {
         }
         // Now lets create the user, we either get an error message or the user from the backend
         const res:string | AuthUser = await validateSignUp(newUser, values.password);  
-
+        setIsLoading(false);                    // We are done with the request, aka done loading
         if (typeof(res) === 'string'){
             // We get here if we got an error message back
             displayDialog(res);
@@ -45,7 +49,6 @@ const SignUpScreen:React.FC<{}> = (prop) => {
             // We get here if we got the newly created user from the backend
             auth.login(res);
         }
-        setIsLoading(false);
     }
 
     const dismissDialog = ():void => {
@@ -60,117 +63,123 @@ const SignUpScreen:React.FC<{}> = (prop) => {
 
     return(
         <SafeAreaView>
-            <Portal>
-                <Dialog
-                    visible={showDialog}
-                    onDismiss={dismissDialog}
-                >
-                     <Dialog.Title>SignUp Fail</Dialog.Title>
-                     <Dialog.Content><Paragraph>{dialogError}</Paragraph></Dialog.Content>
-                     <Dialog.Actions>
-                         <Button
-                            mode="contained"
-                            onPress={dismissDialog}
-                         >
-                             Ok
-                        </Button>
-                     </Dialog.Actions>
-                </Dialog>
-            </Portal>
-            <Formik
-                initialValues={
-                    {
-                        first_name: '',
-                        last_name: '',
-                        email: '',
-                        confirmEmail: '',
-                        password: '',
-                        confirmPassword: ''
-                    } as FormValues
-                }
-                validationSchema={SignUpSchema}
-                onSubmit={async(values) => {
-                    await submitHandler(values);
-                }}
-            >
-                {(formikProp: FormikProps<FormValues>)=>(
-                    <React.Fragment>
-                        <Input 
-                            label="First Name"
-                            onInput={formikProp.handleChange('first_name')}
-                            error={
-                                (formikProp.errors.first_name && formikProp.touched.first_name) ? true: false
-                            }
-                            errorMsg={formikProp.errors.first_name}
-                            contentType="givenName"
-                            autoCompleteType="name"
-                        />
-                        <Input 
-                            label="Last Name"
-                            onInput={formikProp.handleChange('last_name')}
-                            error={
-                                (formikProp.errors.last_name && formikProp.touched.last_name) ? true: false
-                            }
-                            errorMsg={formikProp.errors.last_name}
-                            contentType="familyName"
-                            autoCompleteType="name"
-                        />
-                        <Input 
-                            label="Email"
-                            error={
-                                (formikProp.errors.email && formikProp.touched.email) ? true: false
-                            }
-                            errorMsg={formikProp.errors.email}
-                            onInput={formikProp.handleChange('email')}
-                            keyboardType="email-address"
-                            contentType="emailAddress"
-                            autoCompleteType="email"
-                        />
-                        <Input 
-                            label="Confirm Email"
-                            error={
-                                (formikProp.errors.confirmEmail && formikProp.touched.confirmEmail) ? true: false
-                            }
-                            errorMsg={formikProp.errors.confirmEmail}
-                            onInput={formikProp.handleChange('confirmEmail')}
-                            keyboardType="email-address"
-                            contentType="emailAddress"
-                            autoCompleteType="email"
-                        />
-                        <Input 
-                            label="Password"
-                            error={
-                                (formikProp.errors.password && formikProp.touched.password) ? true: false
-                            }
-                            errorMsg={formikProp.errors.password}
-                            onInput={formikProp.handleChange('password')}
-                            isSensitive
-                            contentType="newPassword"
-                            autoCompleteType="password"
-                        />
-                        <Input 
-                            label="Confirm Password"
-                            error={
-                                (formikProp.errors.confirmPassword && formikProp.touched.confirmPassword) ? true: false
-                            }
-                            errorMsg={formikProp.errors.confirmPassword}
-                            onInput={formikProp.handleChange('confirmPassword')}
-                            isSensitive
-                            contentType="newPassword"
-                            autoCompleteType="password"
-                        />
+            {isLoading && 
+                <View style={styles.loading}>
+                    <ActivityIndicator size="large" />
+                </View>
+            }
+            {!isLoading &&
+                <><Portal>
+                    <Dialog
+                        visible={showDialog}
+                        onDismiss={dismissDialog}
+                    >
+                        <Dialog.Title>SignUp Fail</Dialog.Title>
+                        <Dialog.Content><Paragraph>{dialogError}</Paragraph></Dialog.Content>
+                        <Dialog.Actions>
+                            <Button
+                                mode="contained"
+                                onPress={dismissDialog}
+                            >
+                                Ok
+                            </Button>
+                        </Dialog.Actions>
+                    </Dialog>
+                </Portal>
+                    <Formik
+                        initialValues={{
+                            first_name: '',
+                            last_name: '',
+                            email: '',
+                            confirmEmail: '',
+                            password: '',
+                            confirmPassword: ''
+                        } as FormValues}
+                        validationSchema={SignUpSchema}
+                        onSubmit={async (values) => {
+                            setIsLoading(true);
+                            await submitHandler(values);
+                        } }
+                    >
+                        {(formikProp: FormikProps<FormValues>) => (
+                            <React.Fragment>
+                                <Input
+                                    label="First Name"
+                                    onInput={formikProp.handleChange('first_name')}
+                                    error={(formikProp.errors.first_name && formikProp.touched.first_name) ? true : false}
+                                    errorMsg={formikProp.errors.first_name}
+                                    contentType="givenName"
+                                    autoCompleteType="name" />
+                                <Input
+                                    label="Last Name"
+                                    onInput={formikProp.handleChange('last_name')}
+                                    error={(formikProp.errors.last_name && formikProp.touched.last_name) ? true : false}
+                                    errorMsg={formikProp.errors.last_name}
+                                    contentType="familyName"
+                                    autoCompleteType="name" />
+                                <Input
+                                    label="Email"
+                                    error={(formikProp.errors.email && formikProp.touched.email) ? true : false}
+                                    errorMsg={formikProp.errors.email}
+                                    onInput={formikProp.handleChange('email')}
+                                    keyboardType="email-address"
+                                    contentType="emailAddress"
+                                    autoCompleteType="email" />
+                                <Input
+                                    label="Confirm Email"
+                                    error={(formikProp.errors.confirmEmail && formikProp.touched.confirmEmail) ? true : false}
+                                    errorMsg={formikProp.errors.confirmEmail}
+                                    onInput={formikProp.handleChange('confirmEmail')}
+                                    keyboardType="email-address"
+                                    contentType="emailAddress"
+                                    autoCompleteType="email" />
+                                <Input
+                                    label="Password"
+                                    error={(formikProp.errors.password && formikProp.touched.password) ? true : false}
+                                    errorMsg={formikProp.errors.password}
+                                    onInput={formikProp.handleChange('password')}
+                                    isSensitive
+                                    contentType="newPassword"
+                                    autoCompleteType="password" />
+                                <Input
+                                    label="Confirm Password"
+                                    error={(formikProp.errors.confirmPassword && formikProp.touched.confirmPassword) ? true : false}
+                                    errorMsg={formikProp.errors.confirmPassword}
+                                    onInput={formikProp.handleChange('confirmPassword')}
+                                    isSensitive
+                                    contentType="newPassword"
+                                    autoCompleteType="password" />
 
-                        <Button 
-                            onPress={formikProp.handleSubmit} 
-                            mode="contained"
-                        >
-                            Submit
-                        </Button>
-                    </React.Fragment>
-                )}
-            </Formik>
+                                <Button
+                                    onPress={formikProp.handleSubmit}
+                                    mode="contained"
+                                >
+                                    Submit
+                                </Button>
+                            </React.Fragment>
+                        )}
+                    </Formik></>
+            }
+            <Button 
+                mode="outlined"
+                onPress={prop.switchToLogin}
+            >
+                SWITCH TO LOGIN
+            </Button>
         </SafeAreaView>
     );
 }
+
+const styles = StyleSheet.create({
+    loading: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        alignItems: 'center',
+        justifyContent: 'center'
+    }
+})
 
 export default SignUpScreen;

@@ -41,18 +41,15 @@ export default function App() {
 			  <Portal.Host>
 				  <SafeAreaView>
 					{isLoginMode && 
-						<LoginScreen />
+						<LoginScreen 
+							switchToSignUp={() => setIsLoginMode(false)}
+						/>
 					}
 					{!isLoginMode && 
-						<SignUpScreen/>
+						<SignUpScreen 
+							switchToLogin={() => setIsLoginMode(true)}
+						/>
 					}
-					<Button
-						mode="outlined"
-						onPress={() => setIsLoginMode(!isLoginMode)}
-					>
-						{isLoginMode && "SWITCH TO SIGNUP"}
-						{!isLoginMode && "SWITCH TO LOGIN"}
-					</Button>
 				</SafeAreaView>
 			  </Portal.Host>
 				
