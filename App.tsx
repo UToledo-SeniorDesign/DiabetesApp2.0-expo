@@ -6,7 +6,7 @@ import { Button, Portal } from 'react-native-paper';
 // Screens & Navigation
 import LoginScreen from "./src/screens/UserScreens/LoginScreen";
 import SignUpScreen from "./src/screens/UserScreens/SignUpScreen";
-import RootNavigation from "./src/navigation/RootNavigation";
+import RootNavigation from "./src/navigation/Navigation";
 
 // Util 
 import AuthContext from './src/util/context/auth-context';

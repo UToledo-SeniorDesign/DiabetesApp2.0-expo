@@ -3,13 +3,13 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 import { createStackNavigator } from "@react-navigation/stack";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-import HomeScreen from "./screens/HomeScreen";
-import InsulinHomeScreen from "./screens/InsulinScreens/InsulinHomeScreen";
-import AddMealScreen from "./screens/InsulinScreens/AddMealScreen";
-import CalculateInsulinScreen from "./screens/InsulinScreens/CalculateInsulinScreen";
-import HistoryScreen from "./screens/HistoryScreen";
-import InfoScreen from "./screens/InfoScreen";
-import ProfileScreen from "./screens/ProfileScreen";
+import HomeScreen from "../screens/HomeScreen";
+import InsulinHomeScreen from "../screens/InsulinScreens/InsulinHomeScreen";
+import AddMealScreen from "../screens/InsulinScreens/AddMealScreen";
+import CalculateInsulinScreen from "../screens/InsulinScreens/CalculateInsulinScreen";
+import HistoryScreen from "../screens/HistoryScreen";
+import InfoScreen from "../screens/InfoScreen";
+import ProfileScreen from "../screens/UserScreens/UserProfile";
 
 const Tab = createMaterialBottomTabNavigator();
 const HomeStack = createStackNavigator();
