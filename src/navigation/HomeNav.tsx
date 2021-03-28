@@ -1,15 +1,20 @@
-import React from "react";
-import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+/**
+ * Navigation when the user is signed in
+*/
+
+import React from 'react';
 import { createStackNavigator } from "@react-navigation/stack";
+import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-import HomeScreen from "./screens/HomeScreen";
-import InsulinHomeScreen from "./screens/InsulinScreens/InsulinHomeScreen";
-import AddMealScreen from "./screens/InsulinScreens/AddMealScreen";
-import CalculateInsulinScreen from "./screens/InsulinScreens/CalculateInsulinScreen";
-import HistoryScreen from "./screens/HistoryScreen";
-import InfoScreen from "./screens/InfoScreen";
-import ProfileScreen from "./screens/ProfileScreen";
+// Screens
+import HomeScreen from "../screens/HomeScreen";
+import InsulinHomeScreen from "../screens/InsulinScreens/InsulinHomeScreen";
+import AddMealScreen from "../screens/InsulinScreens/AddMealScreen";
+import CalculateInsulinScreen from "../screens/InsulinScreens/CalculateInsulinScreen";
+import HistoryScreen from "../screens/HistoryScreen";
+import InfoScreen from "../screens/InfoScreen";
+import ProfileScreen from "../screens/UserScreens/UserProfile";
 
 const Tab = createMaterialBottomTabNavigator();
 const HomeStack = createStackNavigator();
@@ -18,52 +23,53 @@ const InfoStack = createStackNavigator();
 const HistoryStack = createStackNavigator();
 const ProfileStack = createStackNavigator();
 
-const HomeScreens = () => {
-  return (
-    <HomeStack.Navigator>
-      <HomeStack.Screen name="Home" component={HomeScreen} />
-    </HomeStack.Navigator>
-  );
-};
+const HomeNav:React.FC<{}> = () => {
 
-const InsulinScreens = () => {
-  return (
-    <InsulinStack.Navigator>
-      <InsulinStack.Screen name="Insulin Home" component={InsulinHomeScreen} />
-      <InsulinStack.Screen name="Add Meal" component={AddMealScreen} />
-      <InsulinStack.Screen
-        name="Calculate Insulin"
-        component={CalculateInsulinScreen}
-      />
-    </InsulinStack.Navigator>
-  );
-};
+  const HomeScreens = () => {
+    return (
+      <HomeStack.Navigator>
+        <HomeStack.Screen name="Home" component={HomeScreen} />
+      </HomeStack.Navigator>
+    );
+  };
+  
+  const InsulinScreens = () => {
+    return (
+      <InsulinStack.Navigator>
+        <InsulinStack.Screen name="Insulin Home" component={InsulinHomeScreen} />
+        <InsulinStack.Screen name="Add Meal" component={AddMealScreen} />
+        <InsulinStack.Screen
+          name="Calculate Insulin"
+          component={CalculateInsulinScreen}
+        />
+      </InsulinStack.Navigator>
+    );
+  };
+  
+  const InfoScreens = () => {
+    return (
+      <InfoStack.Navigator>
+        <InfoStack.Screen name="Info" component={InfoScreen} />
+      </InfoStack.Navigator>
+    );
+  };
+  
+  const HistoryScreens = () => {
+    return (
+      <HistoryStack.Navigator>
+        <HistoryStack.Screen name="History" component={HistoryScreen} />
+      </HistoryStack.Navigator>
+    );
+  };
+  
+  const ProfileScreens = () => {
+    return (
+      <ProfileStack.Navigator>
+        <ProfileStack.Screen name="Profile" component={ProfileScreen} />
+      </ProfileStack.Navigator>
+    );
+  };
 
-const InfoScreens = () => {
-  return (
-    <InfoStack.Navigator>
-      <InfoStack.Screen name="Info" component={InfoScreen} />
-    </InfoStack.Navigator>
-  );
-};
-
-const HistoryScreens = () => {
-  return (
-    <HistoryStack.Navigator>
-      <HistoryStack.Screen name="History" component={HistoryScreen} />
-    </HistoryStack.Navigator>
-  );
-};
-
-const ProfileScreens = () => {
-  return (
-    <ProfileStack.Navigator>
-      <ProfileStack.Screen name="Profile" component={ProfileScreen} />
-    </ProfileStack.Navigator>
-  );
-};
-
-const Navigation = () => {
   return (
     <Tab.Navigator
       initialRouteName="HomeScreens"
@@ -128,4 +134,4 @@ const Navigation = () => {
   );
 };
 
-export default Navigation;
+export default HomeNav;
