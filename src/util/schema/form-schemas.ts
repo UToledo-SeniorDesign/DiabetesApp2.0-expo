@@ -58,7 +58,31 @@ const LoginSchema = yup.object().shape({
         .required('Password is required')
 });
 
+const AddMealSchema = yup.object().shape({
+    foodName: yup
+        .string()
+        .label('foodName')
+        .required('Food name is required'),
+    foodBrand: yup
+        .string()
+        .ensure()
+        .label('foodBrand'),
+    servingCarbs: yup
+        .number()
+        .label('servingCarbs')
+        .required('Carbs per serving is required')
+        .integer('Total servings needs to be a number')
+        .min(1, 'Carbs per serving needs to be equal or greater than one'),
+    totServings: yup
+        .number()
+        .label('totServings')
+        .required('Total servings is required')
+        .integer('Total servings needs to be a number')
+        .min(1, 'Total servings needs to be equal or greater than one')
+});
+
 export {
     SignUpSchema,
-    LoginSchema
+    LoginSchema,
+    AddMealSchema
 };
