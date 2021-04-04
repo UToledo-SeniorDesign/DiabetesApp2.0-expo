@@ -1,38 +1,75 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { 
 	StyleSheet, 
 	View,
-	Alert,
 	TouchableWithoutFeedback,
 	ScrollView,
-	Keyboard
+	Keyboard,
+	Text
 } from 'react-native'
-import { Formik, FormikProps } from 'formik';
+import { Formik, FormikHelpers, FormikProps } from 'formik';
+import {Card} from 'react-native-paper';
 
 import Input from '../../components/UIElements/Input';
 import LoadMeal from '../../components/Insulin/LoadMeal';
 import Button from '../../components/UIElements/Button';
 
-import Colors from '../../constants/Colors';
+import AuthContext from '../../util/context/auth-context';
 import { AddMealSchema } from '../../util/schema/form-schemas'
-import type { IMeal } from '../../types/meal-types';
+import { getUserMeals } from '../../services/meal-service';
+
+import type { IMeal, IFoodItem } from '../../types/meal-types';
 
 interface MealScreenProps{
 	navigate: any;
 }
 
 const MealScreen:React.FC<MealScreenProps> = (props) => {
-	const [meal, setMeal] = useState<IMeal>();
-	const [meals, setMeals] = useState<IMeal[]>([]);
+	const { loggedUser } = useContext(AuthContext);
+	const [createdFoods, setCreatedFoods] = useState<IFoodItem[]>([]);
 	const [displayModal, setDisplayModal] = useState<boolean>(false);
-	const [loadedMeals, setLoadedMeals] = useState<IMeal[]>([]);
+	const [savedMeals, setSavedMeals] = useState<IMeal[]>([]);
 
-	const loadMealHandler = (newLoadedMeals: IMeal[]):void => {
-		setLoadedMeals(newLoadedMeals);
+	useEffect(() => {
+		const loadMeals = async() => {
+			const userMeals = await getUserMeals(loggedUser);
+			if (userMeals){
+				setSavedMeals(userMeals);
+			}
+		}
+		loadMeals();
+	}, [])
+
+	const loadMealHandler = (selectedMeals: IMeal[]) => {
+		// Now lets add every food item in those meals to the newMeal
+		// let tempMeal = newMeal;
+
+		// for (let i = 0; i < selectedMeals.length; i++){
+		// 	const meal = selectedMeals[i];
+		// 	const foods = meal.foodItems;
+		// 	foods.forEach(food => {
+		// 		tempMeal.foodItems.push(food);
+		// 		tempMeal.totCarbs += food.servingCarbs * food.totServings;
+		// 	});
+		// }
+		// setNewMeal(tempMeal)
 	};
 
-	const addMealHandler = (newMeal: IMeal):void => {
-		alert(JSON.stringify(newMeal));
+	const addItemHanlder = (newFood: IFoodItem, formikHelper: FormikHelpers<IFoodItem>) => {
+		// Add the Food item to the current meal we are building
+		// createdFoods.push(newFood);
+		const newFoods = [...createdFoods, newFood];
+		setCreatedFoods(newFoods);
+		
+		// Now lets reset the form to let the user input a new food item
+		formikHelper.resetForm({
+			values: {
+				foodName: '',
+				foodBrand: '',
+				totServings: 0,
+				servingCarbs: 0
+			}
+		});
 	}
 
 	return (
@@ -41,25 +78,23 @@ const MealScreen:React.FC<MealScreenProps> = (props) => {
 				onPress={() => Keyboard.dismiss()}
 			>
 				<View style={styles.screen}>
-					{/* <LoadMeal
+					<LoadMeal
+						savedMeals={savedMeals}
 						displayModal={displayModal}
-						onDismiss={() => {
-							setDisplayModal(false);
-						}}
+						onDismiss={() => setDisplayModal(false)}
 						onFinishLoad={loadMealHandler}
-					/> */}
-					{/* Here we create the formik */}
+					/>
 					<Formik
 						initialValues={{
 							foodName:'',
 							foodBrand: '',
 							servingCarbs: 0,
-							totServings: 0
-						} as IMeal}
-						onSubmit={addMealHandler}
+							totServings: 0,
+						} as IFoodItem}
+						onSubmit={(values, actions) => addItemHanlder(values, actions)}
 						validationSchema={AddMealSchema}
 					>
-						{(formikProp: FormikProps<IMeal>) => (
+						{(formikProp: FormikProps<IFoodItem>) => (
 							
 							<View style={styles.foodForm}>
 								<Input
@@ -71,6 +106,7 @@ const MealScreen:React.FC<MealScreenProps> = (props) => {
 									errorMsg={formikProp.errors.foodName}
 									keyboardType='default'
 									contentType='none'
+									value={formikProp.values.foodName}
 								/>
 								<Input
 									label="Food Brand"
@@ -81,6 +117,7 @@ const MealScreen:React.FC<MealScreenProps> = (props) => {
 									errorMsg={formikProp.errors.foodBrand}
 									keyboardType='default'
 									contentType='none'
+									value={formikProp.values.foodBrand}
 								/>
 								<Input
 									label="Carbs per Serving"
@@ -91,6 +128,7 @@ const MealScreen:React.FC<MealScreenProps> = (props) => {
 									errorMsg={formikProp.errors.servingCarbs}
 									keyboardType='numeric'
 									contentType='none'
+									value={formikProp.values.servingCarbs.toString()}
 								/>
 								<Input
 									label="Total Servings"
@@ -101,38 +139,52 @@ const MealScreen:React.FC<MealScreenProps> = (props) => {
 									errorMsg={formikProp.errors.totServings}
 									keyboardType='numeric'
 									contentType='none'
+									value={formikProp.values.totServings.toString()}
 								/>
 								<View style={styles.buttonContainer}>
 									<View style={styles.button}>
 										<Button 
-											text="Add Meal"
-											onPress={formikProp.handleSubmit}
+											text="Add Food"
+											onPress={() => {
+												formikProp.handleSubmit();
+												if (formikProp.isValidating && !formikProp.isSubmitting){
+													formikProp.resetForm({values: {
+														foodName: '',
+														foodBrand: '',
+														totServings: 0,
+														servingCarbs: 0
+													}});
+												}
+											}}
 										/>
 									</View>
-									<View style={styles.button}>
-										<Button 
-											text="Calculate Insulin"
-											onPress={() => alert('Insuling calc part')}
-										/>
-									</View>
+									
 								</View>
 								<View style={styles.buttonContainer}>
+									<View style={styles.button}>
+										<Button 
+											text="Load Meal"
+											onPress={() => setDisplayModal(true)}											
+											mode='contained'
+										/>
+									</View>
 									<View style={styles.button}>
 										<Button
 											text="Save Meal"
 											onPress={() => alert('Save meal handler')}
-										/>
-									</View>
-									<View style={styles.button}>
-										<Button 
-											text="Load Meal"
-											onPress={() => alert('Load meal!!')}
+											disabled={createdFoods.length === 0}
 										/>
 									</View>
 								</View>
 							</View>
 						)}
 					</Formik>
+					<Card>
+						<Card.Content>
+							{createdFoods.length === 0 && <Text>No items added yet!</Text>}
+							{createdFoods.length > 0 && <Text>{JSON.stringify(createdFoods)}</Text>}
+						</Card.Content>
+					</Card>
 				</View>
 			</TouchableWithoutFeedback>
 		</ScrollView>
