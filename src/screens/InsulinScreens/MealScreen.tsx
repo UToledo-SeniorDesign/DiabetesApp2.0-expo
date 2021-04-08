@@ -11,7 +11,7 @@ import { Formik, FormikHelpers, FormikProps } from 'formik';
 import {Card} from 'react-native-paper';
 
 import Input from '../../components/UIElements/Input';
-import LoadMeal from '../../components/Insulin/LoadMeal';
+import LoadMeal from '../../components/Meal/LoadMeal';
 import Button from '../../components/UIElements/Button';
 
 import AuthContext from '../../util/context/auth-context';
