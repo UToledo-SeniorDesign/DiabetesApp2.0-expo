@@ -27,7 +27,6 @@ async function getUserMeals (loggedUser: AuthUser) {
         const data:GetUserMealData = response.data;
         return data.meals;
     } catch (err){
-        console.log('errorrrr baeeee');
         return null;
     }
 }
