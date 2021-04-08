@@ -19,6 +19,7 @@ import { AddMealSchema } from '../../util/schema/form-schemas'
 import { getUserMeals } from '../../services/meal-service';
 
 import type { IMeal, IFoodItem } from '../../types/meal-types';
+import FoodItemTable from '../../components/Meal/FoodItemTable';
 
 interface MealScreenProps{
 	navigate: any;
@@ -184,7 +185,7 @@ const MealScreen:React.FC<MealScreenProps> = (props) => {
 					<Card>
 						<Card.Content>
 							{createdFoods.length === 0 && <Text>No items added yet!</Text>}
-							{createdFoods.length > 0 && <Text>{JSON.stringify(createdFoods)}</Text>}
+							{createdFoods.length > 0 && <FoodItemTable foodItems={createdFoods} />}
 						</Card.Content>
 					</Card>
 				</View>

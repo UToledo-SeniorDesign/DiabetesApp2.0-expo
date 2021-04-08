@@ -12,7 +12,7 @@ const FoodItemTable:React.FC<FoodItemTableProps> = (props) => {
 
     const rows = props.foodItems.map((food: IFoodItem) => {
         return (
-            <DataTable.Row>
+            <DataTable.Row key={food.foodName}>
                 <DataTable.Cell style={styles.foodName}>
                     {food.foodName}
                 </DataTable.Cell>
