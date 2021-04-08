@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { Modal, View, StyleSheet, SafeAreaView } from "react-native";
 import Button from '../UIElements/Button';
-import Colors from "../../constants/Colors";
-import FakeMealData from "../../services/FakeMealData";
 import { DataTable, Checkbox } from "react-native-paper";
 
 import type { IMeal } from '../../types/meal-types';
