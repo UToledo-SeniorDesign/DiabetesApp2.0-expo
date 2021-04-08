@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { 
 	StyleSheet, 
 	View,
@@ -41,23 +41,25 @@ const MealScreen:React.FC<MealScreenProps> = (props) => {
 	}, [])
 
 	const loadMealHandler = (selectedMeals: IMeal[]) => {
-		// Now lets add every food item in those meals to the newMeal
-		// let tempMeal = newMeal;
+		/**
+		 * Here we add/append the food items inside the meal(s) to the createdFoods state
+		*/
+		
+		const newFoods:IFoodItem[] = [];
+		selectedMeals.forEach(meal => {
+			const foodItems = meal.foodItems;
+			foodItems.forEach(newFood => {
+				newFoods.push(newFood);
+			});
+		});
 
-		// for (let i = 0; i < selectedMeals.length; i++){
-		// 	const meal = selectedMeals[i];
-		// 	const foods = meal.foodItems;
-		// 	foods.forEach(food => {
-		// 		tempMeal.foodItems.push(food);
-		// 		tempMeal.totCarbs += food.servingCarbs * food.totServings;
-		// 	});
-		// }
-		// setNewMeal(tempMeal)
+		newFoods.forEach(newFood => {
+			setCreatedFoods(oldFoods => [...oldFoods, newFood]);
+		});
 	};
 
 	const addItemHanlder = (newFood: IFoodItem, formikHelper: FormikHelpers<IFoodItem>) => {
 		// Add the Food item to the current meal we are building
-		// createdFoods.push(newFood);
 		const newFoods = [...createdFoods, newFood];
 		setCreatedFoods(newFoods);
 		
