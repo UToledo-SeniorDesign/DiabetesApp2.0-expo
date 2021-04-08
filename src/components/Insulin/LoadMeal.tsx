@@ -8,7 +8,6 @@ import { DataTable, Checkbox } from "react-native-paper";
 import type { IMeal } from '../../types/meal-types';
 
 interface LoadMealProps{
-	// loadedMeals: IMeal[];
 	savedMeals: IMeal[]
 	onDismiss: () => void;
 	onFinishLoad: (meals: IMeal[]) => void;
@@ -74,7 +73,6 @@ const LoadMeal:React.FC<LoadMealProps> = (props) => {
 					<DataTable>
 						<DataTable.Header>
 							<DataTable.Title style={styles.meal}>Meal</DataTable.Title>
-							{/* <DataTable.Title style={styles.title}>Brand</DataTable.Title> */}
 							<DataTable.Title style={styles.title}>Carbs(g)</DataTable.Title>
 							<DataTable.Title style={styles.title}>Total Foods</DataTable.Title>
 							<DataTable.Title style={styles.check}>Select</DataTable.Title>
@@ -90,9 +88,6 @@ const LoadMeal:React.FC<LoadMealProps> = (props) => {
 									<DataTable.Cell style={styles.meal}>
 										{meal.name}
 									</DataTable.Cell>
-									{/* <DataTable.Cell style={styles.title}>
-										{meal.brand}
-									</DataTable.Cell> */}
 									<DataTable.Cell style={styles.title}>
 										{meal.totCarbs}
 									</DataTable.Cell>
