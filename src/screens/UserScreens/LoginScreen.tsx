@@ -8,7 +8,7 @@ import Spinner from '../../components/UIElements/Spinner';
 import Button from '../../components/UIElements/Button';
 
 import AuthContext from '../../util/context/auth-context';
-import { validateLogin } from '../../services/AuthUser';
+import { validateLogin } from '../../services/auth-service';
 import { LoginSchema } from '../../util/schema/form-schemas';
 import { IUserLogin, AuthUser } from '../../types/users-types';
 
