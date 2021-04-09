@@ -9,7 +9,7 @@ import Spinner from '../../components/UIElements/Spinner';
 
 import AuthContext from '../../util/context/auth-context'
 import { SignUpSchema } from '../../util/schema/form-schemas';
-import { validateSignUp } from '../../services/AuthUser';
+import { validateSignUp } from '../../services/auth-service';
 import type { IUser, AuthUser } from '../../types/users-types';
 
 interface FormValues extends IUser {

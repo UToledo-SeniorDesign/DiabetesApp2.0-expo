@@ -1,22 +1,28 @@
 import React, { useState } from "react";
-import { Modal, View, StyleSheet, Button } from "react-native";
-import Colors from "../../constants/Colors";
-import FakeMealData, { MealDetail } from "../../services/FakeMealData";
+import { Modal, View, StyleSheet, SafeAreaView } from "react-native";
+import Button from '../UIElements/Button';
 import { DataTable, Checkbox } from "react-native-paper";
 
-const LoadMeal = (props: any) => {
-	const [loadedMeals, setLoadedMeals] = useState<MealDetail[]>(
-		props.loadedMeals
-	);
+import type { IMeal } from '../../types/meal-types';
+
+interface LoadMealProps{
+	savedMeals: IMeal[]
+	onDismiss: () => void;
+	onFinishLoad: (meals: IMeal[]) => void;
+	displayModal: boolean;
+}
+
+const LoadMeal:React.FC<LoadMealProps> = (props) => {
+	const [loadedMeals, setLoadedMeals] = useState<IMeal[]>([]);
 	const [page, setPage] = useState(0);
 	const [canLoadMeal, setCanLoadMeal] = useState(false);
 
-	const savedMeals: MealDetail[] = FakeMealData.savedMeals;
+	const { savedMeals } = props;
 	const itemsPerPage = 10;
 	const from = page * itemsPerPage;
 	const to = (page + 1) * itemsPerPage;
 
-	const onSelectHandler = (selectedMeal: MealDetail) => {
+	const onSelectHandler = (selectedMeal: IMeal) => {
 		let tempMeals = [...loadedMeals];
 		let changedList = false;
 
@@ -59,18 +65,17 @@ const LoadMeal = (props: any) => {
 	};
 
 	return (
-		<View>
+		<SafeAreaView style={styles.screen}>
 			<Modal visible={props.displayModal} animationType="slide">
 				<View style={styles.tableView}>
 					<DataTable>
 						<DataTable.Header>
 							<DataTable.Title style={styles.meal}>Meal</DataTable.Title>
-							<DataTable.Title style={styles.title}>Brand</DataTable.Title>
 							<DataTable.Title style={styles.title}>Carbs(g)</DataTable.Title>
-							<DataTable.Title style={styles.title}>Servings</DataTable.Title>
+							<DataTable.Title style={styles.title}>Total Foods</DataTable.Title>
 							<DataTable.Title style={styles.check}>Select</DataTable.Title>
 						</DataTable.Header>
-						{savedMeals.map((meal: MealDetail) => {
+						{savedMeals.map((meal: IMeal) => {
 							return (
 								<DataTable.Row
 									key={meal.name}
@@ -82,13 +87,10 @@ const LoadMeal = (props: any) => {
 										{meal.name}
 									</DataTable.Cell>
 									<DataTable.Cell style={styles.title}>
-										{meal.brand}
+										{meal.totCarbs}
 									</DataTable.Cell>
 									<DataTable.Cell style={styles.title}>
-										{meal.carbsPerServing}
-									</DataTable.Cell>
-									<DataTable.Cell style={styles.title}>
-										{meal.totalServing}
+										{meal.foodItems.length}
 									</DataTable.Cell>
 									<DataTable.Cell style={styles.check}>
 										<Checkbox
@@ -111,19 +113,22 @@ const LoadMeal = (props: any) => {
 				</View>
 				<View style={styles.buttonContainer}>
 					<View style={styles.button}>
-						<Button
-							disabled={!canLoadMeal}
-							title="Load Meal"
-							color={Colors.primary}
-							onPress={onLoadMealHandler}
+						<Button 
+							text="Cancel" 
+							onPress={onCancelHandler} 
+							mode='outlined'
 						/>
 					</View>
 					<View style={styles.button}>
-						<Button title="Cancel" onPress={onCancelHandler} />
+						<Button
+							disabled={!canLoadMeal}
+							text="Load"
+							onPress={onLoadMealHandler}
+						/>
 					</View>
 				</View>
 			</Modal>
-		</View>
+		</SafeAreaView>
 	);
 };
 
@@ -140,7 +145,7 @@ const styles = StyleSheet.create({
 		width: "100%",
 	},
 	button: {
-		width: "40%",
+		width: "45%",
 		padding: 30,
 	},
 	screen: {

@@ -10,7 +10,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 // Screens
 import HomeScreen from "../screens/HomeScreen";
 import InsulinHomeScreen from "../screens/InsulinScreens/InsulinHomeScreen";
-import AddMealScreen from "../screens/InsulinScreens/AddMealScreen";
+import AddMealScreen from "../screens/InsulinScreens/MealScreen";
 import CalculateInsulinScreen from "../screens/InsulinScreens/CalculateInsulinScreen";
 import HistoryScreen from "../screens/HistoryScreen";
 import InfoScreen from "../screens/InfoScreen";

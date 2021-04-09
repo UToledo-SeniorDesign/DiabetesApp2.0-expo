@@ -21,6 +21,6 @@ export interface AuthUser extends IUser {
      * This will be used to show and send requests to the backend with verified data.
     */
 
-    _id: string;
+    id: string;
     token: string;
 }

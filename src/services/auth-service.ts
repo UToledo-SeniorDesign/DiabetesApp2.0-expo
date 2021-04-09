@@ -4,46 +4,14 @@
  * 
 */
 
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 
+import errorHandler from './ErrorHandler';
 import type { IUser, AuthUser } from '../types/users-types';
 
 interface ResponseData {
     // Attributes sent as 'data' from a successful (200) HTTP request
     user: AuthUser;
-}
-
-
-interface IErrorResponse {
-    // Interface for response data from a HTTP request when we get an error
-    message: string;
-}
-
-const errorHandler = (error: any): string => {
-    /**
-     * Function handles the output error message given an error from a catch block
-     * @param error is an error from a catch block when making a async-await request
-     * @return String that will be the output error message to display
-    */
-
-    let errorMessage:string;
-         if (error.response){
-             // Request made and server responded, response.status has the HTTP error code we got back
-             const response:AxiosResponse = error.response;      // Save the response as AxiosResponse type
-             const data:IErrorResponse = response.data;          // Get the data from the response
-             errorMessage = data.message;                        // Get the error message from the data
-             return errorMessage;                                // Return the error to display in the app
-         }else if (error.request){
-             // The request was made but no response was received from the server
-            //  console.log(error.request);
-             errorMessage = "There was an error on our side, please try again later."
-             return errorMessage;
-         } else{
-             // Something happened in setting up the request that triggered an Error
-             console.log('Error', error.message);
-             errorMessage = "Some error occurred, please try again later."
-             return errorMessage;
-         }
 }
 
 async function validateLogin(email: string, password: string) {
@@ -89,9 +57,7 @@ async function validateSignUp(newUser: IUser, password: string) {
 
         const data:ResponseData = response.data;            // Get the data from the respnose
         const user:AuthUser = data.user;                    // Get the created user data from the backend
-        return user;                                        // We return the created user with token and id
-        // We get here if we got an 'Ok' response, aka a 200 HTTP request
-
+        return user;                                        // We return the created user with token and id=
     } catch (error) {
         return errorHandler(error);
     }

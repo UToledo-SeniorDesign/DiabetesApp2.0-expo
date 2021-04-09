@@ -1,4 +1,4 @@
-import React, { useState, memo } from 'react';
+import React, { memo } from 'react';
 import { Text, View, StyleSheet, KeyboardTypeOptions } from 'react-native';
 import { TextInput } from 'react-native-paper';
 
@@ -36,10 +36,7 @@ const Input:React.FC<InputProp> = (prop) => {
         onInput
     } = prop;
 
-  const [text, setText] = useState<string>(value || '');
-
   const onChange = (newText: string) => {
-      setText(newText);                 // To mantain the as a controlled component
       onInput(newText);                 // Return the current text state to parent component
   }
 
@@ -47,7 +44,7 @@ const Input:React.FC<InputProp> = (prop) => {
         <View style={styles.container}>
             <TextInput
                 label={label}
-                value={value || text}
+                value={value}
                 placeholder={placeholder}
                 onChangeText={text => onChange(text)}
                 disabled={disabled}
@@ -65,7 +62,6 @@ const Input:React.FC<InputProp> = (prop) => {
                 </Text>
             }
         </View>
-    
   );
 };
 
