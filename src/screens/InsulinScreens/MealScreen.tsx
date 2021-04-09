@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useCallback } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { 
 	StyleSheet, 
 	View,
@@ -7,17 +7,16 @@ import {
 	Keyboard,
 	Text
 } from 'react-native'
-import { Formik, FormikHelpers, FormikProps } from 'formik';
+import { FormikHelpers } from 'formik';
 import {Card} from 'react-native-paper';
 
-import Input from '../../components/UIElements/Input';
 import LoadMeal from '../../components/Meal/LoadMeal';
 import Button from '../../components/UIElements/Button';
 import FoodItemTable from '../../components/Meal/FoodItemTable';
 import SaveMeal from '../../components/Meal/SaveMeal';
+import CreateFoodItem from '../../components/Meal/CreateFoodItem';
 
 import AuthContext from '../../util/context/auth-context';
-import { AddMealSchema } from '../../util/schema/form-schemas'
 import { getUserMeals } from '../../services/meal-service';
 import type { IMeal, IFoodItem } from '../../types/meal-types';
 
@@ -28,7 +27,7 @@ interface MealScreenProps{
 const MealScreen:React.FC<MealScreenProps> = (props) => {
 	const { loggedUser } = useContext(AuthContext);
 	const [createdFoods, setCreatedFoods] = useState<IFoodItem[]>([]);
-	const [displayModal, setDisplayModal] = useState<boolean>(false);
+	const [isLoadingMeal, setIsLoadingMeal] = useState<boolean>(false);
 	const [savedMeals, setSavedMeals] = useState<IMeal[]>([]);
 	const [isSavingMeal, setIsSavingMeal] = useState(false);
 
@@ -66,14 +65,7 @@ const MealScreen:React.FC<MealScreenProps> = (props) => {
 		setCreatedFoods(newFoods);
 		
 		// Now lets reset the form to let the user input a new food item
-		formikHelper.resetForm({
-			values: {
-				foodName: '',
-				foodBrand: '',
-				totServings: 0,
-				servingCarbs: 0
-			}
-		});
+		formikHelper.resetForm({});
 	}
 
 	return (
@@ -82,118 +74,40 @@ const MealScreen:React.FC<MealScreenProps> = (props) => {
 				onPress={() => Keyboard.dismiss()}
 			><>
 				{isSavingMeal && 
-					<View style={styles.foodForm}>
-						<SaveMeal 
-							foodItems={createdFoods}
-							userMeals={savedMeals}
-							userID={loggedUser.id}
-							onMealCreated={(() => setIsSavingMeal(false))}
-						/>
-					</View>
+					<SaveMeal 
+						foodItems={createdFoods}
+						userMeals={savedMeals}
+						userID={loggedUser.id}
+						onMealCreated={(() => setIsSavingMeal(false))}
+					/>
 				}
 				{!isSavingMeal &&
 					<View style={styles.screen}>
 						<LoadMeal
 							savedMeals={savedMeals}
-							displayModal={displayModal}
-							onDismiss={() => setDisplayModal(false)}
+							displayModal={isLoadingMeal}
+							onDismiss={() => setIsLoadingMeal(false)}
 							onFinishLoad={loadMealHandler}
 						/>
-						<Formik
-							initialValues={{
-								foodName:'',
-								foodBrand: '',
-								servingCarbs: 0,
-								totServings: 0,
-							} as IFoodItem}
-							onSubmit={(values, actions) => addItemHanlder(values, actions)}
-							validationSchema={AddMealSchema}
-						>
-							{(formikProp: FormikProps<IFoodItem>) => (
-								
-								<View style={styles.foodForm}>
-									<Input
-										label="Food Name"
-										onInput={formikProp.handleChange('foodName')}
-										error={
-											(formikProp.errors.foodName && formikProp.touched.foodName)? true : false
-										}
-										errorMsg={formikProp.errors.foodName}
-										keyboardType='default'
-										contentType='none'
-										value={formikProp.values.foodName}
-									/>
-									<Input
-										label="Food Brand"
-										onInput={formikProp.handleChange('foodBrand')}
-										error={
-											(formikProp.errors.foodBrand && formikProp.touched.foodBrand)? true : false
-										}
-										errorMsg={formikProp.errors.foodBrand}
-										keyboardType='default'
-										contentType='none'
-										value={formikProp.values.foodBrand}
-									/>
-									<Input
-										label="Carbs per Serving"
-										onInput={formikProp.handleChange('servingCarbs')}
-										error={
-											(formikProp.errors.servingCarbs && formikProp.touched.servingCarbs)? true : false
-										}
-										errorMsg={formikProp.errors.servingCarbs}
-										keyboardType='numeric'
-										contentType='none'
-										value={formikProp.values.servingCarbs.toString()}
-									/>
-									<Input
-										label="Total Servings"
-										onInput={formikProp.handleChange('totServings')}
-										error={
-											(formikProp.errors.totServings && formikProp.touched.totServings)? true : false
-										}
-										errorMsg={formikProp.errors.totServings}
-										keyboardType='numeric'
-										contentType='none'
-										value={formikProp.values.totServings.toString()}
-									/>
-									<View style={styles.buttonContainer}>
-										<View style={styles.button}>
-											<Button 
-												text="Add Food"
-												onPress={() => {
-													formikProp.handleSubmit();
-													if (formikProp.isValidating && !formikProp.isSubmitting){
-														formikProp.resetForm({values: {
-															foodName: '',
-															foodBrand: '',
-															totServings: 0,
-															servingCarbs: 0
-														}});
-													}
-												}}
-											/>
-										</View>
-										
-									</View>
-									<View style={styles.buttonContainer}>
-										<View style={styles.button}>
-											<Button 
-												text="Load Meal"
-												onPress={() => setDisplayModal(true)}											
-												mode='contained'
-											/>
-										</View>
-										<View style={styles.button}>
-											<Button
-												text="Save Meal"
-												onPress={() => setIsSavingMeal(true)}
-												disabled={createdFoods.length === 0}
-											/>
-										</View>
-									</View>
-								</View>
-							)}
-						</Formik>
+						<CreateFoodItem 
+							onCreatedFood={(foodItem, actions) => addItemHanlder(foodItem, actions)}
+						/>
+						<View style={styles.buttonContainer}>
+							<View style={styles.button}>
+								<Button 
+									text="Load Meal"
+									onPress={() => setIsLoadingMeal(true)}							
+									mode='contained'
+								/>
+							</View>
+							<View style={styles.button}>
+								<Button
+									text="Save Meal"
+									onPress={() => setIsSavingMeal(true)}
+									disabled={createdFoods.length === 0}
+								/>
+							</View>
+						</View>
 						<Card>
 							<Card.Content>
 								{createdFoods.length === 0 && <Text>No items added yet!</Text>}
@@ -212,16 +126,6 @@ const styles = StyleSheet.create({
 		flex: 1,
 		flexDirection: "column",
 		justifyContent: "center",
-	},
-	foodForm: {
-		flex: 3,
-		width: "100%",
-	},
-	inputContainer: {
-		marginVertical: 20,
-		flexDirection: "row",
-		justifyContent: "space-around",
-		alignItems: "center",
 	},
 	buttonContainer: {
 		flex: 1,

@@ -58,7 +58,7 @@ const LoginSchema = yup.object().shape({
         .required('Password is required')
 });
 
-const AddMealSchema = yup.object().shape({
+const AddFoodItemSchema = yup.object().shape({
     foodName: yup
         .string()
         .label('foodName')
@@ -84,5 +84,5 @@ const AddMealSchema = yup.object().shape({
 export {
     SignUpSchema,
     LoginSchema,
-    AddMealSchema
+    AddFoodItemSchema
 };
