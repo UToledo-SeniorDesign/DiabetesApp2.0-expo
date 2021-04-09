@@ -3,8 +3,9 @@
  * 
 */
 
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 
+import ErrorHandler from './ErrorHandler';
 import type { IMeal } from '../types/meal-types';
 import type { AuthUser } from '../types/users-types';
 
@@ -28,18 +29,19 @@ async function getUserMeals (loggedUser: AuthUser) {
     }
 }
 
-async function createMeal(user:AuthUser, meal: IMeal) {
+async function createMeal(newMeal: IMeal) {
     try {
         const response = await axios.post('http://10.0.0.3:5000/api/meals/', {
-            creator_id: user.id,
-            meal_name: meal.name,
-            total_carbs: meal.totCarbs,
-            food_items: meal.foodItems
+            creator_id: newMeal.creator,
+            meal_name:  newMeal.name,
+            total_carbs:newMeal.totCarbs,
+            food_items: newMeal.foodItems
         });
         const data:CreateMealData = response.data;
         return data.meal;
     } catch(err){
-        return null;
+        const errMsg = ErrorHandler(err);
+        return errMsg;
     }
 }
 
