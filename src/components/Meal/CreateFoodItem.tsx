@@ -14,7 +14,10 @@ interface CreateFoodItemProps{
 const CreateFoodItem:React.FC<CreateFoodItemProps> = (props) => {
 
     const submitHandler = (formValues: IFoodItem, actions: FormikHelpers<IFoodItem>):void => {
-        props.onCreatedFood(formValues, actions);
+        const foodItem = formValues;
+        foodItem.servingCarbs = Number(foodItem.servingCarbs);
+        foodItem.totServings = Number(foodItem.totServings);
+        props.onCreatedFood(foodItem, actions);
     }
 
     return(
