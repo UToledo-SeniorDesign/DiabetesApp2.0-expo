@@ -66,7 +66,10 @@ const LoadMeal:React.FC<LoadMealProps> = (props) => {
 
 	return (
 		<SafeAreaView style={styles.screen}>
-			<Modal visible={props.displayModal} animationType="slide">
+			<Modal visible={props.displayModal} 
+				animationType="slide"
+				presentationStyle="formSheet"
+			>
 				<View style={styles.tableView}>
 					<DataTable>
 						<DataTable.Header>

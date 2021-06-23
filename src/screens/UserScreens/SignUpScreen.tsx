@@ -155,13 +155,10 @@ const SignUpScreen:React.FC<{}> = (prop) => {
 
 const styles = StyleSheet.create({
     loading: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0,
-        alignItems: 'center',
-        justifyContent: 'center'
+        flex: 1,
+        marginTop: 240,
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 })
 

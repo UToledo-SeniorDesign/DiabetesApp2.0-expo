@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, SafeAreaView, StyleSheet } from 'react-native';
 import {
     Avatar,
@@ -9,9 +9,12 @@ import {
 
 import InfoBox from '../../components/UIElements/InfoBox';
 import AuthContext from '../../util/context/auth-context';
+import MealContext from '../../util/context/meal-context';
 
 const UserProfile: React.FC<{}> = () => {
     const {loggedUser, logout} = useContext(AuthContext);
+    const {meals} = useContext(MealContext);
+    const [todayCarbs, setTodayCarbs] = useState(0);
     const {
         first_name,
         last_name,
@@ -19,6 +22,14 @@ const UserProfile: React.FC<{}> = () => {
         img
     } = loggedUser;
     const fullName = first_name + " " + last_name;
+
+    useEffect(() => {
+        let totCarbs = 0;
+        meals.forEach(meal => {
+            totCarbs += meal.totCarbs
+        });
+        setTodayCarbs(totCarbs);
+    }, [meals.length])
 
     return (
         <SafeAreaView style={styles.container}>
@@ -45,12 +56,12 @@ const UserProfile: React.FC<{}> = () => {
 
             <View style={styles.infoBoxWrapper}>
                 <InfoBox 
-                    title="140"
+                    title={String(todayCarbs)}
                     caption="Today's Carbs"
                     styling={{borderRightColor: '#dddddd', borderRightWidth: 1}}
                 />
                 <InfoBox 
-                    title="12"
+                    title="0"
                     caption="Today's Insulin Intake"
                 />
             </View>

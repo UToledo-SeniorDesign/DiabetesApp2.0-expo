@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { SafeAreaView, View, Text } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { SafeAreaView } from 'react-native';
 import { Formik, FormikProps } from 'formik';
 import * as Yup from 'yup';
 
@@ -7,6 +7,7 @@ import Input from '../UIElements/Input';
 import Button from '../UIElements/Button';
 import { createMeal } from '../../services/meal-service';
 import type { IFoodItem, IMeal } from '../../types/meal-types';
+import MealContext from '../../util/context/meal-context';
 
 interface SaveMealProps {
     foodItems: IFoodItem[];         // New food items to create
@@ -21,6 +22,7 @@ interface ISaveMealForm{
 
 const SaveMeal:React.FC<SaveMealProps> = (props) => {
     const [isLoading, setIsLoading] = useState(false);
+    const { meals } = useContext(MealContext);
     const { foodItems, userMeals, userID } = props;
     const savedMealNames = userMeals.map(meal => {
         return meal.name;
@@ -56,6 +58,7 @@ const SaveMeal:React.FC<SaveMealProps> = (props) => {
             
         } else{
             // We successfully added the new meal in the backend
+            meals.push(response);
             alert(JSON.stringify(response));
         }
 
